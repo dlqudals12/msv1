@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- PAGE settings -->
+    <link rel="icon" href="https://templates.pingendo.com/assets/Pingendo_favicon.ico">
+    <title>Pricing</title>
+    <meta name="description" content="Wireframe design of a pricing table by Pingendo">
+    <meta name="keywords" content="Pingendo bootstrap example template wireframe pricing table">
+    <meta name="author" content="Pingendo">
+    <!-- CSS dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/wireframe.css">
+</head>
+
+<body class="bg-light">
+<div th:replace="fragment/header :: header">
+</div>
+<div class="py-5 text-center">
+    <div class="container">
+        <div class="row">
+            <div class="mx-auto col-lg-6 col-10">
+                <h1>NewVocaBoard</h1>
+                <form class="text-left" th:action="@{/vocaboard/new}" method="post">
+                    <div class="form-group">
+                        <label for="form16">title</label> <input type="text" class="form-control" id="form16" name="title" placeholder="Title">
+                        <label for="form17">Point</label> <input type="text" class="form-control" id="form17" name="point" placeholder="Point">
+                        <label for="form28">Board</label> <textarea class="form-control" id="form28" name="board"></textarea>
+                    </div>
+                    <input type="hidden" name="vocaid" th:attr="value=${vocaid}">
+                    <button type="submit" class="btn btn-primary">New</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragment/footer :: footer">
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
+</body>
+
+</html>
