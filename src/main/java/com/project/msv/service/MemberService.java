@@ -38,5 +38,13 @@ public class MemberService {
         return member.get().getId();
     }
 
+    public Optional<Member> findbyvocaid(Long id) {
+        return memberRepository.findByVocaid(id);
+    }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
 
 }

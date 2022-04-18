@@ -1,8 +1,10 @@
 package com.project.msv.controller;
 
+import com.project.msv.dto.MemberDetail;
 import com.project.msv.dto.MemberDto;
 import com.project.msv.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +27,11 @@ public class MemberController {
     }
 
     @GetMapping("/")
-    public String main() {
+    public String main(@AuthenticationPrincipal MemberDetail memberDetail) {
+        if (memberDetail != null) {
+            return "/member/usermain";
+        }
+
         return "/member/main";
     }
 

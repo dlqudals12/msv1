@@ -1,9 +1,17 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/msv?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://127.0.0.1:3306/msv?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 38595472
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 560454378714-2pvpoigh48l1dn310gq7969ng63lb2h2.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
   jpa:
     hibernate:
       jdbc:
@@ -14,17 +22,17 @@ spring:
     properties:
         show_sql: true
         format_sql: true
-
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
-
   data:
     web:
       pageable:
         default-page-size: 10
         max-page-size: 2000
-
-
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    include: oauth
 
 logging.level:
   org.hibernate.SQL: debug

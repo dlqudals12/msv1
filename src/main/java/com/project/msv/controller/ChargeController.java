@@ -22,7 +22,7 @@ public class ChargeController {
 
     private final ChargeService chargeService;
 
-    @GetMapping("/charge/new")
+    @GetMapping("/user/charge/new")
     public String newCharge() {
         return "/charge/new";
     }
@@ -30,10 +30,10 @@ public class ChargeController {
     @PostMapping("/charge/new")
     public String newCharge(ChargeDto chargeDto, @AuthenticationPrincipal MemberDetail memberDetail) {
         chargeService.save(chargeDto, memberDetail.getMember());
-        return "redirect:/charge/list";
+        return "redirect:/user/charge/list";
     }
 
-    @GetMapping("charge/list")
+    @GetMapping("/user/charge/list")
     public String chargeList(@AuthenticationPrincipal MemberDetail memberDetail, Model model) {
         List<Charge> chargeList = chargeService.findByMember(memberDetail.getMember());
         model.addAttribute("chargeList", chargeList);

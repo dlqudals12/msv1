@@ -18,24 +18,55 @@
 <body class="bg-light">
 <div th:replace="fragment/userheader :: userheader">
 </div>
-<div class="py-5 text-center">
+
+<div class="py-5 text-center" style="background-image: url(&quot;https://static.pingendo.com/cover-bubble-dark.svg&quot;); background-size: cover;">
     <div class="container">
         <div class="row">
-            <div class="mx-auto col-lg-6 col-10">
-                <h1>NewVocaBoard</h1>
-                <form class="text-left" th:action="@{/vocaboard/new}" method="post">
-                    <div class="form-group">
-                        <label for="form16">title</label> <input type="text" class="form-control" id="form16" name="title" placeholder="Title">
-                        <label for="form17">Point</label> <input type="text" class="form-control" id="form17" name="point" placeholder="Point">
-                        <label for="form28">Board</label> <textarea class="form-control" id="form28" name="board"></textarea>
-                    </div>
-                    <input type="hidden" name="vocaid" th:attr="value=${vocaid}">
-                    <button type="submit" class="btn btn-primary">New</button>
-                </form>
+            <div class="col-md-12" >
+                <h1 class="display-1">MyExchangeList</h1>
             </div>
         </div>
     </div>
 </div>
+<div class="py-5" draggable="true">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered ">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Point</th>
+                            <th>Views</th>
+                            <th>Buycount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${vocaBoard}">
+                            <td><a th:href="@{/user/vocaboard/detail/{id}(id = ${item.id})}" th:text="${item.title}"></a></td>
+                            <td th:text="${item.point}"></td>
+                            <td th:text="${item.count}"></td>
+                            <td th:text="${item.buycount}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination pagination-lg justify-content-center">
+        <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage - 1)}">
+            <a class="page-link" th:href="@{/vocaboard/listall(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>
+        </li>
+    </ul>
+</nav>
+
+
+
+
 
 <div th:replace="fragment/footer :: footer">
 </div>

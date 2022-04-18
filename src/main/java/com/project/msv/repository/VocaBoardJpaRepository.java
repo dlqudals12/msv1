@@ -3,6 +3,8 @@ package com.project.msv.repository;
 
 import com.project.msv.domain.VocaBoard;
 
+import com.project.msv.domain.voca.QVoca;
+import com.project.msv.domain.voca.QVocaWord;
 import com.project.msv.dto.QVocaDto;
 import com.project.msv.dto.QVocaWordDto;
 import com.project.msv.dto.VocaDto;
@@ -29,11 +31,9 @@ public class VocaBoardJpaRepository {
     public List<VocaWordDto> copyWord(Long id) {
         return queryFactory
                 .select(new QVocaWordDto(vocaWord.word1, vocaWord.word2, vocaWord.word3, vocaWord.word4))
-                .from(vocaBoard)
-                .leftJoin(vocaBoard.voca, voca)
-                .fetchJoin()
-                .leftJoin(vocaBoard.voca.vocaWords, vocaWord)
-                .fetchJoin()
+                .from(vocaWord)
+                .join(vocaWord.voca, voca)
+                .join(voca.vocaBoard, vocaBoard)
                 .where(vocaBoard.id.eq(id))
                 .fetch();
     }
@@ -41,11 +41,8 @@ public class VocaBoardJpaRepository {
     public VocaDto copyVocaname(Long id) {
         return queryFactory
                 .select(new QVocaDto(voca.vocaname, voca.country, voca.word1name, voca.word2name, voca.word3name, voca.word4name))
-                .from(vocaBoard)
-                .leftJoin(vocaBoard.voca, voca)
-                .fetchJoin()
-                .leftJoin(vocaBoard.voca.vocaWords, vocaWord)
-                .fetchJoin()
+                .from(voca)
+                .join(voca.vocaBoard, vocaBoard)
                 .where(vocaBoard.id.eq(id))
                 .fetchOne();
     }

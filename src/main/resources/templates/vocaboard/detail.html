@@ -12,12 +12,13 @@
     <meta name="author" content="Pingendo">
     <!-- CSS dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/wireframe.css">
+    <link rel="stylesheet" href="/css/wireframe.css">
 </head>
 
 <body class="bg-light">
-<div th:replace="fragment/header :: header">
+<div th:replace="fragment/userheader :: userheader">
 </div>
+
 <div class="py-5">
     <div class="container">
         <div class="row">
@@ -27,6 +28,10 @@
                     <div class="card-body">
                         <h4 th:text="${vocaboard.title}"></h4>
                         <p th:text="${vocaboard.board}"></p>
+
+                        <a th:href="'javascript:cancel('+${vocaboard.id}+')'"
+                           class="btn btn-danger">COMP</a>
+
                     </div>
                 </div>
             </div>
@@ -36,6 +41,15 @@
 
 <div th:replace="fragment/footer :: footer">
 </div>
+<script>
+    function cancel(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/vocaboard/detail/" + id + "/buy");
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,9 +33,12 @@ public class VocaBoard extends CUpdate {
     @JoinColumn(name = "voca_id")
     private Voca voca;
 
+
     private int count;
 
     private int buycount;
+
+
 
     @Builder
     public VocaBoard(String title, String board, int point, Voca voca, int count, int buycount) {

@@ -16,41 +16,41 @@
 </head>
 
 <body class="bg-light" >
-<div class="d-flex flex-column flex-md-row align-items-center p-3 mb-3 box-shadow border-bottom" th:fragment="header">
+<div class="d-flex flex-column flex-md-row align-items-center p-3 mb-3 box-shadow border-bottom" th:fragment="userheader">
     <a class="my-0 mr-md-auto font-weight-normal" href="/">Home</a>
     <nav class="my-2 my-md-0 mr-md-3">
         <div class="btn-group">
-        <div class="dropdown show">
-            <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Point
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/user/charge/new">ChargePoint</a>
-                <a class="dropdown-item" href="/user/charge/list">ChargeList</a>
+            <div class="dropdown show">
+                <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Point
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/user/charge/new">ChargePoint</a>
+                    <a class="dropdown-item" href="/user/charge/list">ChargeList</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown show">
-            <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Voca
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/user/voca/new">NewVoca</a>
-                <a class="dropdown-item" href="/user/voca/vocalist">VocaList</a>
+            <div class="dropdown show">
+                <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Voca
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/user/voca/new">NewVoca</a>
+                    <a class="dropdown-item" href="/user/voca/vocalist">VocaList</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown show">
-            <a class="btn btn-outline-secondary  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                VocaBoard
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/user/vocaboard/memberlist">MyVocaBoard</a>
-                <a class="dropdown-item" href="/vocaboard/list">VocaBoardList</a>
+            <div class="dropdown show">
+                <a class="btn btn-outline-secondary  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    VocaBoard
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/user/vocaboard/memberlist">MyVocaBoard</a>
+                    <a class="dropdown-item" href="/vocaboard/list">VocaBoardList</a>
+                </div>
             </div>
-        </div>
         </div>
     </nav>
-    <a class="btn btn-outline-info" href="/signup">Sign up</a>
-    <a class="btn btn-outline-info" href="/login">Login</a>
+    <a href="/logout" class="btn btn-lg btn-primary mx-1">Logout</a>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

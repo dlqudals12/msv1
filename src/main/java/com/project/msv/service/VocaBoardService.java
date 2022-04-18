@@ -25,7 +25,9 @@ public class VocaBoardService {
 
     private final VocaBoardRepository vocaBoardRepository;
     private final VocaBoardJpaRepository vocaBoardJpaRepository;
+    private final MemberVocaService memberVocaService;
     private final VocaService vocaService;
+    private final MemberService memberService;
 
     @Transactional
     public Long save(VocaBoardDto vocaBoardDto, Voca voca) {
@@ -34,17 +36,23 @@ public class VocaBoardService {
 
     //포인트 결제시 복제 저장 로직
     @Transactional
-    public List<VocaWord> saveVocaWord(Long id, Member member) {
-        List<VocaWordDto> vocaWordDtos = vocaBoardJpaRepository.copyWord(id);
+    public List<VocaWord> saveVocaWord(Long id, Long memberid) {
         Optional<VocaBoard> vocaBoard = vocaBoardRepository.findById(id);
+        List<VocaWordDto> vocaWordDtos = vocaBoardJpaRepository.copyWord(id);
         VocaDto vocaDtos = vocaBoardJpaRepository.copyVocaname(id);
+        Member member = memberService.findById(memberid).get();
 
         Long save = vocaService.save(vocaDtos, member);
         Voca voca = vocaService.findVoca(save);
+        List<VocaWord> vocaWords = vocaService.saveAllWord1(vocaWordDtos, voca);
+
+        Optional<Member> plusmember = memberService.findbyvocaid(id);
+
+
 
         int realPoint = 0;
-        realPoint = voca.getMember().getPoint() + vocaBoard.get().getPoint();
-        voca.getMember().payment(realPoint);
+        realPoint =  plusmember.get().getPoint() + vocaBoard.get().getPoint();
+        plusmember.get().payment(realPoint);
 
         int payPoint = 0;
         payPoint = member.getPoint() - vocaBoard.get().getPoint();
@@ -57,7 +65,9 @@ public class VocaBoardService {
         buycount = vocaBoard.get().getBuycount() + 1;
         vocaBoard.get().updateBuycount(buycount);
 
-        return vocaService.saveAllWord1(vocaWordDtos, voca);
+        memberVocaService.save(id, member);
+
+        return vocaWords;
     }
 
     public Page<VocaBoard> findAllBoard(int page) {

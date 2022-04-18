@@ -22,7 +22,7 @@ public class VocaController {
 
     private final VocaService vocaService;
 
-    @GetMapping("/voca/new")
+    @GetMapping("/user/voca/new")
     public String save() {
        return "/voca/new";
     }
@@ -36,7 +36,7 @@ public class VocaController {
         return "voca/newvoca";
     }
 
-    @GetMapping("voca/newvoca")
+    @GetMapping("/user/voca/newvoca")
     public String newVoca(Model model, @ModelAttribute("vocaid") Long vocaid)
     {
         Voca voca = vocaService.findVoca(vocaid);
@@ -49,13 +49,13 @@ public class VocaController {
     @PostMapping("voca/newvoca")
     public String newvoca(RedirectAttributes model, VocaWordDto vocawordDto, @RequestParam("vocaid") Long vocaid) {
 
-        Long vocawordId = vocaService.saveWord(vocawordDto, vocaid);
+        vocaService.saveWord(vocawordDto, vocaid);
         model.addFlashAttribute("vocaid", vocaid);
 
-        return "redirect:/voca/newvoca";
+        return "redirect:/user/voca/newvoca";
     }
 
-    @GetMapping("/voca/vocalist")
+    @GetMapping("/user/voca/vocalist")
     public String list(@AuthenticationPrincipal MemberDetail memberDetail, Model model) {
         List<Voca> voca = vocaService.findVocaByMemberid(memberDetail.getMember().getId());
 

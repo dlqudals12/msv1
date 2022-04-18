@@ -25,17 +25,20 @@ public class Member extends CUpdate{
     @Column(nullable = false, unique = true, length = 200)
     private String password;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private String phone;
 
     @Column(nullable = false)
     private int point;
+
+    private String provider; //oauth2 플렛폼정보
+    private String providerId; //oauth2 Id
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -54,7 +57,22 @@ public class Member extends CUpdate{
     @OneToMany(mappedBy = "member")
     List<Voca> voca = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    List<Membervoca> membervocas = new ArrayList<>();
+
     //비지니스 로직
+
+
+    @Builder(builderClassName = "OAuth2Register",builderMethodName = "oAuth2Resister")
+    public Member(String username, String password, String email, int point, String provider, String providerId, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.point = point;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.role = role;
+    }
 
     @Builder
     public Member(String username, String password, String name, String email, String phone, int point, Address address, Role role) {
