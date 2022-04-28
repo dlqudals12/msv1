@@ -18,7 +18,15 @@
 <body class="bg-light">
 <div th:replace="fragment/userheader :: userheader">
 </div>
-
+<div class="py-5 text-center" style="background-image: url(&quot;https://static.pingendo.com/cover-bubble-dark.svg&quot;); background-size: cover;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" >
+                <h1 class="display-1">VocaDetail</h1>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="py-5" draggable="true">
     <div class="container">
         <div class="row">
@@ -32,6 +40,7 @@
                             <td th:text="${voca.word3name}"></td>
                             <td th:text="${voca.word4name}"></td>
                         </tr>
+                        </thead>
                         <tbody>
                         <div id="list">
                             <tr th:each="item : ${vocawordList}">

@@ -18,4 +18,7 @@ public interface VocaWordRepositoy extends JpaRepository<VocaWord, Long> {
     @Query(value = "select v from VocaWord v  where v.id = :id")
     List<VocaWord> findByVocawordId(@Param("id") Long id);
 
+    @Query(value = "select v from VocaWord v join v.voca c where c.id = :id")
+    List<VocaWord> findByVocaId(@Param("id") Long id);
+
 }

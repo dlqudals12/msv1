@@ -1,6 +1,8 @@
 package com.project.msv.controller;
 
 import com.project.msv.domain.Member;
+import com.project.msv.domain.Membervoca;
+import com.project.msv.domain.VocaBoard;
 import com.project.msv.domain.voca.Voca;
 import com.project.msv.domain.voca.VocaWord;
 import com.project.msv.service.VocaService;
@@ -68,6 +70,20 @@ public class VocaController {
         Voca voca = vocaService.findVoca(vocaid);
         model.addFlashAttribute("voca", voca);
         return "/vocaboard/new";
+    }
+
+    @GetMapping("/user/voca/detail/{id}")
+    public String payment(@PathVariable("id") Long id, Model model,@AuthenticationPrincipal MemberDetail memberDetail) {
+        if (memberDetail == null) {
+            return "redirect:/";
+        }
+        Voca voca = vocaService.findVoca(id);
+        List<VocaWord> byVocaid = vocaService.findByVocaid(id);
+
+        model.addAttribute("voca", voca);
+        model.addAttribute("vocawordList", byVocaid);
+
+        return "/voca/vocadetail";
     }
 
 

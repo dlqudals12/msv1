@@ -80,5 +80,9 @@ public class VocaService {
         return vocaJpaRepository.findVocaByMember(id);
     }
 
+    public List<VocaWord> findByVocaid(Long id) {
+        return vocaWordRepositoy.findByVocaId(id);
+    }
+
 
 }

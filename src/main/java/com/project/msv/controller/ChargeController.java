@@ -1,18 +1,17 @@
 package com.project.msv.controller;
 
 import com.project.msv.domain.Charge;
+import com.project.msv.dto.GiveMoneyDto;
 import com.project.msv.dto.charge.ChargeDto;
 import com.project.msv.dto.MemberDetail;
 import com.project.msv.service.ChargeService;
+import com.project.msv.service.GiveMoneyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ import java.util.List;
 public class ChargeController {
 
     private final ChargeService chargeService;
+    private final GiveMoneyService giveMoneyService;
 
     @GetMapping("/user/charge/new")
     public String newCharge() {
@@ -57,5 +57,16 @@ public class ChargeController {
     public String chargeComp(@PathVariable("chargeid") Long chargeid) {
         chargeService.updateStatus(chargeid);
         return "redirect:/admin/chargeList";
+    }
+
+    @GetMapping("/user/exchange")
+    public String exchage() {
+        return "/charge/exchange";
+    }
+
+    @PostMapping("/user/exchange/point")
+    public String exchagepoint(@ModelAttribute GiveMoneyDto giveMoneyDto, @AuthenticationPrincipal MemberDetail memberDetail) {
+        giveMoneyService.savePoint(giveMoneyDto, memberDetail.getMember());
+        return "redirect:/user/member";
     }
 }

@@ -87,6 +87,6 @@ public class VocaBoardController {
 
         vocaBoardService.saveVocaWord(id, memberDetail.getMember().getId());
 
-        return "redirect:/";
+        return "/member/usermain";
     }
 }
