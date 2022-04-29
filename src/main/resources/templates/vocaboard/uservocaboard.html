@@ -29,8 +29,18 @@
     </div>
 </div>
 <div class="py-5" draggable="true">
+
     <div class="container">
+        <div class="col-md-12">
+            <form class="form-inline " th:action="@{/vocaboard/list/search}" method="post">
+                <div class="input-group">
+                    <input type="text" class="form-control " id="inlineFormInputGroup" placeholder="Search" name="title">
+                    <div class="input-group-append"><button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button></div>
+                </div>
+            </form>
+        </div>
         <div class="row">
+
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-bordered ">

@@ -5,13 +5,16 @@ import com.project.msv.domain.VocaBoard;
 
 import com.project.msv.domain.voca.QVoca;
 import com.project.msv.domain.voca.QVocaWord;
-import com.project.msv.dto.QVocaDto;
-import com.project.msv.dto.QVocaWordDto;
-import com.project.msv.dto.VocaDto;
-import com.project.msv.dto.VocaWordDto;
+import com.project.msv.dto.*;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -20,6 +23,7 @@ import static com.project.msv.domain.QMember.*;
 import static com.project.msv.domain.QVocaBoard.*;
 import static com.project.msv.domain.voca.QVoca.*;
 import static com.project.msv.domain.voca.QVocaWord.*;
+import static org.springframework.util.StringUtils.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -56,5 +60,23 @@ public class VocaBoardJpaRepository {
                 .join(voca.member, member)
                 .where(member.id.eq(id))
                 .fetch();
+    }
+
+    public Page<VocaBoard> findBytitle(VocaBoardSearchDto vocaBoardSearchDto, Pageable pageable) {
+        QueryResults<VocaBoard> vocaBoardQueryResults = queryFactory
+                .selectFrom(vocaBoard)
+                .where(titleEq(vocaBoardSearchDto.getTitle()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<VocaBoard> results = vocaBoardQueryResults.getResults();
+        long total = vocaBoardQueryResults.getTotal();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+    public BooleanExpression titleEq(String title) {
+        return hasText(title) ? vocaBoard.title.contains(title) : null;
     }
 }

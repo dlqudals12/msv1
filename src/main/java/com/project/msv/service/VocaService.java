@@ -44,7 +44,7 @@ public class VocaService {
         for (VocaWordDto vocaWordDto : vocaWordDtos) {
             words.add(vocaWordDto.toEntity(voca));
         }
-        return words;
+        return vocaWordRepositoy.saveAll(words);
     }
 
     public List<VocaWord> findVocaByVocawordId(Long id) {

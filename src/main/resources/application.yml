@@ -33,6 +33,18 @@ spring:
     allow-bean-definition-overriding: true
   profiles:
     include: oauth
+  boot:
+    admin:
+      url: http://localhost:8080
+      client:
+        url: http://localhost:8080
+        username: admin
+        password: admin
+        instance:
+          metadata:
+            member.name: admin
+            member.password: admin
+
 
 logging.level:
   org.hibernate.SQL: debug

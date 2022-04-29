@@ -5,12 +5,14 @@ import com.project.msv.domain.VocaBoard;
 import com.project.msv.domain.voca.Voca;
 import com.project.msv.domain.voca.VocaWord;
 import com.project.msv.dto.VocaBoardDto;
+import com.project.msv.dto.VocaBoardSearchDto;
 import com.project.msv.dto.VocaDto;
 import com.project.msv.dto.VocaWordDto;
 import com.project.msv.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,5 +89,12 @@ public class VocaBoardService {
         board.updateCount(realcount);
 
         return board;
+    }
+
+    public Page<VocaBoard> findBytitle(VocaBoardSearchDto vocaBoardSearchDto, Pageable pageable) {
+        return vocaBoardJpaRepository.findBytitle(vocaBoardSearchDto, pageable);
+
+
+
     }
 }

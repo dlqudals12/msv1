@@ -2,6 +2,8 @@ package com.project.msv.repository;
 
 import com.project.msv.domain.VocaBoard;
 import com.project.msv.domain.voca.Voca;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +20,6 @@ public interface VocaBoardRepository extends JpaRepository<VocaBoard, Long> {
     List<Voca> findByVocaId(@Param("id") Long id);
 
 
+    @Query(value = "select v from VocaBoard v where v.title like '%:title%'")
+    Page<VocaBoard> findBytitle(@Param("String title") String title, PageRequest pageRequest);
 }

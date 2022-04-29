@@ -12,4 +12,7 @@ public interface VocaRepository extends JpaRepository<Voca, Long> {
 
     @Query("select v from Voca v where v.id = :id")
     Voca findById2(@Param("id") Long id);
+
+    @Query("select v from Voca v join v.vocaBoard c where c.id = :id")
+    Voca findByBoardId(@Param("id") Long id);
 }

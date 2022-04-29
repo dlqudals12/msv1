@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/, /login, /signup, /, /vocaboard/list, /vocaboard/listsearch").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .and() // 로그인 설정
                 .formLogin()

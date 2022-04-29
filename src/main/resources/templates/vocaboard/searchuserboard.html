@@ -16,19 +16,20 @@
 </head>
 
 <body class="bg-light">
-<div th:replace="fragment/header :: header">
+<div th:replace="fragment/userheader :: userheader">
 </div>
 
 <div class="py-5 text-center" style="background-image: url(&quot;https://static.pingendo.com/cover-bubble-dark.svg&quot;); background-size: cover;">
   <div class="container">
     <div class="row">
       <div class="col-md-12" >
-        <h1 class="display-1">VocaBoardList</h1>
+        <h1 class="display-1">VocaBoard</h1>
       </div>
     </div>
   </div>
 </div>
 <div class="py-5" draggable="true">
+
   <div class="container">
     <div class="col-md-12">
       <form class="form-inline " th:action="@{/vocaboard/list/search}" method="post">
@@ -39,6 +40,7 @@
       </form>
     </div>
     <div class="row">
+
       <div class="col-md-12">
         <div class="table-responsive">
           <table class="table table-bordered ">
@@ -67,7 +69,7 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination pagination-lg justify-content-center">
     <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage - 1)}">
-      <a class="page-link" th:href="@{/vocaboard/listall(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>
+      <a class="page-link" th:href="@{/vocaboard/listboard(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>
     </li>
   </ul>
 </nav>

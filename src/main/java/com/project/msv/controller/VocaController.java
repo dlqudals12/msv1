@@ -16,6 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
@@ -73,9 +77,13 @@ public class VocaController {
     }
 
     @GetMapping("/user/voca/detail/{id}")
-    public String payment(@PathVariable("id") Long id, Model model,@AuthenticationPrincipal MemberDetail memberDetail) {
+    public String payment(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal MemberDetail memberDetail
+    , HttpServletResponse response) throws IOException {
         if (memberDetail == null) {
-            return "redirect:/";
+            PrintWriter writer = response.getWriter();
+            writer.println("<script>alert('로그인을 해주세요');");
+            writer.flush();
+            return "redirect:/login";
         }
         Voca voca = vocaService.findVoca(id);
         List<VocaWord> byVocaid = vocaService.findByVocaid(id);
