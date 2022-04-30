@@ -3,8 +3,7 @@ package com.project.msv.repository;
 
 import com.project.msv.domain.VocaBoard;
 
-import com.project.msv.domain.voca.QVoca;
-import com.project.msv.domain.voca.QVocaWord;
+
 import com.project.msv.dto.*;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;

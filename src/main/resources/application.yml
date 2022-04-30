@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://springboot-database.cghcyqdrdgpq.ap-northeast-2.rds.amazonaws.com/msv
+    url: jdbc:mysql://msv-db.cawe7ibca4hk.us-west-1.rds.amazonaws.com/msv
     username: admin
     password: rnrnfl12
   security:
@@ -18,7 +18,7 @@ spring:
         batch_size: 1000
         order_inserts: true
         order_updates: true
-      ddl-auto: create
+      ddl-auto: update
     properties:
         show_sql: true
         format_sql: true
