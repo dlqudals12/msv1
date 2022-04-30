@@ -26,7 +26,7 @@ public class MemberController {
 
     @GetMapping("/signup")
     public String sign() {
-        return "/member/signup";
+        return "member/signup";
     }
 
     @PostMapping("/signup")
@@ -44,10 +44,10 @@ public class MemberController {
     @GetMapping("/")
     public String main(@AuthenticationPrincipal MemberDetail memberDetail) {
         if (memberDetail != null) {
-            return "/member/usermain";
+            return "member/usermain";
         }
 
-        return "/member/main";
+        return "member/main";
     }
 
     @GetMapping("/login")
@@ -59,6 +59,6 @@ public class MemberController {
     public String userDetail(@AuthenticationPrincipal MemberDetail memberDetail, Model model) {
         Optional<Member> byId = memberService.findById(memberDetail.getMember().getId());
         model.addAttribute("member", byId.get());
-        return "/member/user";
+        return "member/user";
     }
 }
