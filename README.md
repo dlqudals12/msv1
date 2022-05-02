@@ -25,3 +25,7 @@
 
 ## 4. 데이터베이스 설계(erdcloud)
 ![MPEtFMFmAnFkPgpbp](https://user-images.githubusercontent.com/22268579/165894074-0b6b22f8-c070-465a-a0d0-5e2becbb88fd.png)
+
+## 5. 시연 영상
+
+https://youtu.be/gNMBvpHEuHE
