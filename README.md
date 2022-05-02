@@ -28,4 +28,4 @@
 
 ## 5. 시연 영상
 
-{% include video id="gNMBvpHEuHE" provider="youtube" %}
+[![Video Label](http://img.youtube.com/vi/gNMBvpHEuHE/0.jpg)](https://youtu.be/gNMBvpHEuHE)
