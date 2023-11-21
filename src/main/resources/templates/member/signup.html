@@ -23,15 +23,15 @@
             <div class="row">
                 <div class="mx-auto col-lg-6 col-10">
                     <h1>Signup</h1>
-                    <form class="text-left" th:action="@{/signup}" method="post">
+                    <form class="text-left" id="signupForm" th:action="@{/signup}" method="post" >
                         <div class="form-group">
-                            <label for="form16">Name</label><input type="text" class="form-control" id="form16" name="name" placeholder="Name">
-                            <label for="form17">Email</label> <input type="email" class="form-control" id="form17" name="email" placeholder="email">
-                            <label for="form25">Phone</label> <input type="number" class="form-control" id="form25" name="phone" placeholder="phone">
-                            <label for="form22">Address</label> <input type="text" class="form-control" id="form22" name="street" placeholder="address">
-                            <label for="form23">Zipcode</label> <input type="number" class="form-control" id="form23" name="zipcode" placeholder="zipcode">
-                            <label for="form18">Id</label> <input type="text" class="form-control" id="form18" name="username" placeholder="Id">
-                            <label for="form20">Password</label> <input type="password" class="form-control" id="form20" name="password" placeholder="Password"></div>
+                            <label for="name">Name</label><input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                            <label for="email">Email</label> <input type="email" class="form-control" id="email" name="email" placeholder="email">
+                            <label for="phone">Phone</label> <input type="number" class="form-control" id="phone" name="phone" placeholder="phone">
+                            <label for="address">Address</label> <input type="text" class="form-control" id="address" name="street" placeholder="address">
+                            <label for="zipcode">Zipcode</label> <input type="number" class="form-control" id="zipcode" name="zipcode" placeholder="zipcode">
+                            <label for="userId">Id</label> <input type="text" class="form-control" id="userId" name="username" placeholder="Id">
+                            <label for="userPw">Password</label> <input type="password" class="form-control" id="userPw" name="password" placeholder="Password"></div>
                         <button type="submit" class="btn btn-primary">Sign in</button>
                     </form>
                 </div>
@@ -45,6 +45,62 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
+<script>
+    const regVal = {
+        email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+        password: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/
+    }
+
+    let validation = {
+        name: false,
+        email: false,
+        phone: false,
+        address: false,
+        zipCode: false,
+        userId: false,
+        userPw: false
+    }
+
+    $(document).ready(() => {
+        $('#signupForm').submit(() => {
+            console.log(valueById("name"));
+
+        validation = {
+            name: valueById("name").length < 2,
+        email: !regVal.email.test(valueById("email")),
+        phone: valueById("phone").length < 10 || valueById("phone").length > 11,
+        address: !Boolean(valueById("address")),
+        zipCode: !Boolean(valueById("zipcode")),
+        userId: valueById("userId").length < 5,
+        userPw: !regVal.password.test(valueById("userPw"))
+        }
+
+        if(Object.values(validation).includes(true)) {
+            
+            alert((validation.name ? "이름을" :
+            validation.email ? "이메일을" :
+            validation.phone ? "핸드폰 번호를":
+            validation.address ? "주소를" :
+            validation.zipCode ? "우편번호를" :
+            validation.userId ? "사용자 Id를" :
+            validation.userPw ? "사용자 비밀번호를":
+            "에러"
+            )+"확인해 주세요.");            
+
+            return false;
+        }
+
+        return true;
+    })
+    })
+
+    
+
+    const valueById = (id) => {
+        return document.getElementById(id).value;
+    }
+</script>
+
 </body>
 
 </html>

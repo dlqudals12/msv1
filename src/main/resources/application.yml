@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://msv-db.cawe7ibca4hk.us-west-1.rds.amazonaws.com/msv
-    username: admin
-    password: rnrnfl12
+    url: jdbc:mysql://localhost:3306/msv
+    username: root
+    password: 1234
   security:
     oauth2:
       client:

@@ -13,9 +13,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -30,15 +32,21 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String sign(MemberDto memberDto) {
+    public void sign(MemberDto memberDto, HttpServletResponse response) throws IOException {
         if (memberDto == null) {
-            return "redirect:/";
+            response.sendRedirect("/");
         }
-
 
         memberService.save(memberDto);
 
-        return "redirect:/login";
+        response.sendRedirect("/memberAlert?state=signup");
+    }
+
+    @GetMapping("/memberAlert")
+    public String memberAlert(@RequestParam String state, Model model) {
+        model.addAttribute("state", state);
+
+        return "member/memberAlert";
     }
 
     @GetMapping("/")
