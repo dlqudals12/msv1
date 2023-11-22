@@ -37,14 +37,10 @@ public class VocaBoardController {
     @GetMapping("/vocaboard/list")
     public String boardList(Model model, @AuthenticationPrincipal MemberDetail memberDetail, @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
         Page<VocaBoard> listPage = vocaBoardService.findAllBoard(page);
-        int totalPage = listPage.getTotalPages();
-
+        int totalPage = listPage.getTotalPages() == 0 ? 1 : listPage.getTotalPages();
+        System.out.println(totalPage);
         model.addAttribute("vocaBoard", listPage.getContent());
         model.addAttribute("totalPage", totalPage);
-
-        if (memberDetail != null) {
-            return "/vocaboard/uservocaboard";
-        }
 
         return "/vocaboard/listall";
     }

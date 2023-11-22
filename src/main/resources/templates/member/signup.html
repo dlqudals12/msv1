@@ -48,7 +48,8 @@
 <script>
     const regVal = {
         email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-        password: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/
+        password: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+        userId: /^[A-za-z0-9]{5,15}$/g
     }
 
     let validation = {
@@ -71,7 +72,7 @@
         phone: valueById("phone").length < 10 || valueById("phone").length > 11,
         address: !Boolean(valueById("address")),
         zipCode: !Boolean(valueById("zipcode")),
-        userId: valueById("userId").length < 5,
+        userId: !regVal.userId.test(valueById("userId")),
         userPw: !regVal.password.test(valueById("userPw"))
         }
 
@@ -85,7 +86,7 @@
             validation.userId ? "사용자 Id를" :
             validation.userPw ? "사용자 비밀번호를":
             "에러"
-            )+"확인해 주세요.");            
+            )+" 확인해 주세요.");            
 
             return false;
         }
@@ -93,8 +94,6 @@
         return true;
     })
     })
-
-    
 
     const valueById = (id) => {
         return document.getElementById(id).value;

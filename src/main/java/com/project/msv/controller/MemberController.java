@@ -50,11 +50,7 @@ public class MemberController {
     }
 
     @GetMapping("/")
-    public String main(@AuthenticationPrincipal MemberDetail memberDetail) {
-        if (memberDetail != null) {
-            return "member/usermain";
-        }
-
+    public String main() {
         return "member/main";
     }
 

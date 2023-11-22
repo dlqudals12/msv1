@@ -1,55 +1,160 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- PAGE settings -->
-    <link rel="icon" href="https://templates.pingendo.com/assets/Pingendo_favicon.ico">
+    <link
+      rel="icon"
+      href="https://templates.pingendo.com/assets/Pingendo_favicon.ico"
+    />
     <title>Pricing</title>
-    <meta name="description" content="Wireframe design of a pricing table by Pingendo">
-    <meta name="keywords" content="Pingendo bootstrap example template wireframe pricing table">
-    <meta name="author" content="Pingendo">
+    <meta
+      name="description"
+      content="Wireframe design of a pricing table by Pingendo"
+    />
+    <meta
+      name="keywords"
+      content="Pingendo bootstrap example template wireframe pricing table"
+    />
+    <meta name="author" content="Pingendo" />
     <!-- CSS dependencies -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/wireframe.css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="css/wireframe.css" />
+  </head>
 
-<body class="bg-light">
-<div th:replace="fragment/header :: header">
-</div>
+  <body class="bg-light">
+    <div th:replace="fragment/header :: header"></div>
 
-<div class="py-5 text-center" style="background-image: url('https://static.pingendo.com/cover-bubble-dark.svg');background-size:cover;">
-    <div class="container">
+    <div
+      class="py-5 text-center"
+      style="
+        background-image: url('https://static.pingendo.com/cover-bubble-dark.svg');
+        background-size: cover;
+      "
+    >
+      <div class="container">
         <div class="row">
-            <div class="mx-auto col-md-6 col-10 bg-white p-5">
-                <h1 class="mb-4">Log in</h1>
-                <form th:action="@{login}" th:method="post">
-                    <div class="form-group"> <input type="text" class="form-control" placeholder="Enter Id" name="username" id="form9"> </div>
-                    <div class="form-group mb-3"> <input type="password" class="form-control" name="password" placeholder="Password" id="form10"> <small class="form-text text-muted text-right">
-                        <a href="#"> Recover password</a>
-                    </small> </div> <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-            </div>
+          <div class="mx-auto col-md-6 col-10 bg-white p-5">
+            <h1 class="mb-4">Log in</h1>
+            <form id="loginForm" th:action="@{login}" th:method="post">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Id"
+                  name="username"
+                  id="userId"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  placeholder="Password"
+                  id="userPw"
+                />
+                <small class="form-text text-muted text-right">
+                  <a href="#"> Recover password</a>
+                </small>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <!-- <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a> -->
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<div th:replace="fragment/footer :: footer">
-</div>
-<script th:inline="javascript">
-    window.onload = () => {
+    <div th:replace="fragment/footer :: footer"></div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+    <pingendo
+      onclick="window.open('https://pingendo.com/', '_blank')"
+      style="
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 4px;
+        background-color: #00b0eb;
+        border-radius: 8px;
+        width: 220px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: white;
+      "
+      >Made with Pingendo Free&nbsp;&nbsp;<img
+        src="https://pingendo.com/site-assets/Pingendo_logo_big.png"
+        class="d-block"
+        alt="Pingendo logo"
+        height="16"
+    /></pingendo>
+    <script th:inline="javascript">
+      window.onload = () => {
         const url = window.location.href;
+        const urlParams = new URLSearchParams(window.location.search);
 
-        if(url.includes("/login?error")) {
-            const result = alert("로그인 중에 문제가 발생했습니다. 아이디 비밀번호를 다시 확인해 주세요.");            
+        console.log(document.cookie);
+
+        //if(document.cookie.includes("isLogin=")) {
+        //    window.location.reload("/");
+        //}
+
+        if (url.includes("/login?error")) {
+          alert("로그인 중에 문제가 발생했습니다.");
+
+          window.location.search = "";
         }
-    }
-</script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
-</body>
+      };
+
+      const regVal = {
+        userId: /^[A-za-z0-9]{5,15}$/g,
+        password: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+      };
+
+      $(document).ready(() => {
+        $("#loginForm").submit(() => {
+          const validation = {
+            userId: !regVal.userId.test(valueById("userId")),
+            userPw: !regVal.password.test(valueById("userPw")),
+          };
+
+          if (Object.values(validation).includes(true)) {
+            alert("아이디와 비밀번호를 확인해 주세요.");
+
+            return false;
+          }
+
+          return true;
+        });
+      });
+
+      const valueById = (id) => {
+        return document.getElementById(id).value;
+      };
+    </script>
+  </body>
 </html>

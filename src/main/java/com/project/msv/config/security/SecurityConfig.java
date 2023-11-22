@@ -18,15 +18,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    MemberDetailService memberDetailService;
-
-    @Autowired
-    PrincipalOAuth2MemberService oauth2service;
-
-
+    private final MemberDetailService memberDetailService;
+    private final PrincipalOAuth2MemberService oauth2service;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailHandler loginFailHandler;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -47,12 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and() // 로그인 설정
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
+                .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailHandler)
                 .permitAll()
                 .and() // 로그아웃 설정
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
+                .deleteCookies("isLogin")
                 .invalidateHttpSession(true)
                 .and()
                 .oauth2Login()
@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberDetailService).passwordEncoder(encoder());
+
     }
 
 

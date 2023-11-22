@@ -29,8 +29,13 @@
                 alert("회원가입에 성공하였습니다.");
                 window.location.replace(defaultUrl + "/login");
                 break;
+            case 'login' :
+                alert(urlParams.get("userName") + "님이 로그인에 성공하셨습니다.");
+                localStorage.setItem("idLogin", true);
+                window.location.replace(defaultUrl + "/");
+                break;
             default:    
-                alert("로그인에 성공하였습니다.");
+                alert("서비스 처리중에 오류가 생겼습니다.");
                 window.location.replace(defaultUrl + "/");
         }
     }
