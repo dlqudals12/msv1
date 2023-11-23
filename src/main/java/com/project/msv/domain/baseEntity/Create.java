@@ -17,6 +17,6 @@ public abstract class Create {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime regDt;
 
 }

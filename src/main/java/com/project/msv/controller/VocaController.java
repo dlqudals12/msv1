@@ -1,99 +1,62 @@
 package com.project.msv.controller;
 
-import com.project.msv.domain.Member;
-import com.project.msv.domain.Membervoca;
-import com.project.msv.domain.VocaBoard;
-import com.project.msv.domain.voca.Voca;
-import com.project.msv.domain.voca.VocaWord;
+import com.project.msv.config.security.model.CustomDetails;
+import com.project.msv.dto.request.voca.SaveVocaReq;
+import com.project.msv.dto.request.voca.SaveVocaWordReq;
+import com.project.msv.dto.response.DefaultResponse;
+import com.project.msv.repository.VocaRepository;
 import com.project.msv.service.VocaService;
-import com.project.msv.dto.MemberDetail;
-import com.project.msv.dto.VocaDto;
-import com.project.msv.dto.VocaWordDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/voca")
 public class VocaController {
 
     private final VocaService vocaService;
 
-    @GetMapping("/user/voca/new")
-    public String save() {
-       return "/voca/new";
+    @Operation(summary = "단어장 저장",description = "단어장 저장")
+    @PostMapping(value = "/save_voca")
+    public DefaultResponse saveVoca(@RequestBody SaveVocaReq saveVocaReq, Authentication authentication){
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+
+        vocaService.saveVoca(saveVocaReq, details.getIdx());
+
+        return new DefaultResponse();
     }
 
-    @PostMapping("/voca/new")
-    public String save(VocaDto vocaDto, @AuthenticationPrincipal MemberDetail memberDetail, Model model) {
-        Member member = memberDetail.getMember();
-        Long save = vocaService.save(vocaDto, member);
-        Voca voca = vocaService.findVoca(save);
-        model.addAttribute("voca", voca);
-        return "voca/newvoca";
+    @Operation(summary = "단어장 조회", description = "단어장 조회")
+    @GetMapping(value = "/voca_list")
+    public DefaultResponse findVocaList(@RequestParam(required = false, defaultValue = "") String vocaName, Authentication authentication,
+                                        @RequestParam(defaultValue = "0") int page) {
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+
+        return new DefaultResponse(vocaService.findVocaList(vocaName, details.getIdx(), PageRequest.of(page, 10)));
     }
 
-    @GetMapping("/user/voca/newvoca")
-    public String newVoca(Model model, @ModelAttribute("vocaid") Long vocaid)
-    {
-        Voca voca = vocaService.findVoca(vocaid);
-        List<VocaWord> vocaWords = voca.getVocaWords();
-        model.addAttribute("vocawordList", vocaWords);
-        model.addAttribute("voca", voca);
-        return "/voca/newVoca";
+    @Operation(summary = "단어장 요소 저장", description = "단어장 요소 저장")
+    @PostMapping(value = "/save_voca_word")
+    public DefaultResponse saveVocaWord(@RequestBody SaveVocaWordReq saveVocaWordReq) {
+        vocaService.saveVocaWord(saveVocaWordReq);
+
+        return new DefaultResponse();
     }
 
-    @PostMapping("voca/newvoca")
-    public String newvoca(RedirectAttributes model, VocaWordDto vocawordDto, @RequestParam("vocaid") Long vocaid) {
-
-        vocaService.saveWord(vocawordDto, vocaid);
-        model.addFlashAttribute("vocaid", vocaid);
-
-        return "redirect:/user/voca/newvoca";
+    @Operation(summary = "단어장 요소 조회", description = "단어장 요소 조회")
+    @GetMapping(value = "/voca_word_list")
+    public DefaultResponse vocaWorkdList(@RequestParam Long vocaId) {
+        return new DefaultResponse(vocaService.findVocaWordList(vocaId));
     }
 
-    @GetMapping("/user/voca/vocalist")
-    public String list(@AuthenticationPrincipal MemberDetail memberDetail, Model model) {
-        List<Voca> voca = vocaService.findVocaByMemberid(memberDetail.getMember().getId());
-
-        model.addAttribute("vocaList", voca);
-        return "/voca/list";
+    @Operation(summary = "단어장 삭제", description = "단어장 삭제")
+    @DeleteMapping(value = "/delete_voca/{vocaId}")
+    public DefaultResponse deleteVoca(@PathVariable Long vocaId) {
+        vocaService.deleteVoca(vocaId);
+        return new DefaultResponse();
     }
-
-    @PostMapping("/vocalist/{vocaid}")
-    public String chargeComp(@PathVariable("vocaid") Long vocaid, RedirectAttributes model) {
-        Voca voca = vocaService.findVoca(vocaid);
-        model.addFlashAttribute("voca", voca);
-        return "/vocaboard/new";
-    }
-
-    @GetMapping("/user/voca/detail/{id}")
-    public String payment(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal MemberDetail memberDetail
-    , HttpServletResponse response) throws IOException {
-        if (memberDetail == null) {
-            PrintWriter writer = response.getWriter();
-            writer.println("<script>alert('로그인을 해주세요');");
-            writer.flush();
-            return "redirect:/login";
-        }
-        Voca voca = vocaService.findVoca(id);
-        List<VocaWord> byVocaid = vocaService.findByVocaid(id);
-
-        model.addAttribute("voca", voca);
-        model.addAttribute("vocawordList", byVocaid);
-
-        return "/voca/vocadetail";
-    }
-
-
 
 }

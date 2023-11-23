@@ -1,88 +1,71 @@
 package com.project.msv.service;
 
-import com.project.msv.domain.Member;
-import com.project.msv.domain.voca.Voca;
-import com.project.msv.domain.voca.VocaWord;
-import com.project.msv.dto.VocaDto;
-import com.project.msv.dto.VocaWordDto;
-import com.project.msv.repository.VocaJpaRepository;
-import com.project.msv.repository.VocaRepository;
-import com.project.msv.repository.VocaWordRepositoy;
+import com.project.msv.domain.TradeVoca;
+import com.project.msv.domain.User;
+import com.project.msv.domain.Voca;
+import com.project.msv.domain.VocaWord;
+import com.project.msv.dto.request.voca.SaveVocaReq;
+import com.project.msv.dto.request.voca.SaveVocaWordReq;
+import com.project.msv.dto.response.voca.VocaListRes;
+import com.project.msv.exception.DuplicateException;
+import com.project.msv.exception.NoneException;
+import com.project.msv.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class VocaService {
+
     private final VocaRepository vocaRepository;
-    private final VocaWordRepositoy vocaWordRepositoy;
-    private final VocaJpaRepository vocaJpaRepository;
+    private final UserRepository userRepository;
+    private final VocaWordRepository vocaWordRepository;
+    private final TradeVocaRepository tradeVocaRepository;
 
     @Transactional
-    public Long save(VocaDto vocaDto, Member member) {
-        return vocaRepository.save(vocaDto.toEntity(member)).getId();
-    }
-
-    public Voca findVoca(Long vocaId) {
-        return vocaRepository.findById(vocaId).get();
-    }
-
-    public List<VocaWord> findAll()
-    {
-        return vocaWordRepositoy.findAll();
-    }
-
-    @Transactional
-    public List<VocaWord> saveAllWord1(List<VocaWordDto> vocaWordDtos, Voca voca) {
-        List<VocaWord> words = new ArrayList<>();
-        for (VocaWordDto vocaWordDto : vocaWordDtos) {
-            words.add(vocaWordDto.toEntity(voca));
+    public void saveVoca(SaveVocaReq saveVocaReq, Long idx) {
+        if(vocaRepository.countVocaByVocaName(saveVocaReq.getVocaName()) > 0) {
+            throw new DuplicateException("단어장이");
         }
-        return vocaWordRepositoy.saveAll(words);
-    }
 
-    public List<VocaWord> findVocaByVocawordId(Long id) {
-        return vocaWordRepositoy.findByVocawordId(id);
-    }
+        User user = userRepository.findById(idx).orElseThrow(() -> new NoneException("유저가"));
 
+        Voca voca = vocaRepository.save(saveVocaReq.toEntity(user));
 
-    @Transactional
-    public Long saveWord(VocaWordDto vocaWordDto, Long vocaid) {
-        Optional<Voca> voca = vocaRepository.findById(vocaid);
-        return vocaWordRepositoy.save(vocaWordDto.toEntity(voca.get())).getId();
+        tradeVocaRepository.save(TradeVoca.builder()
+                        .voca(voca)
+                        .user(user)
+                        .build());
     }
 
     @Transactional
-    public List<VocaWord> saveAllWord(List<VocaWord> vocaWord, Voca voca) {
-        List<VocaWord> words = new ArrayList<>();
-        for (VocaWord word : vocaWord) {
-            words.add(VocaWord.builder()
-                    .word4(word.getWord4())
-                    .word3(word.getWord3())
-                    .word2(word.getWord2())
-                    .word1(word.getWord1())
-                    .build());
+    public void saveVocaWord(SaveVocaWordReq saveVocaWordReq) {
+        if(vocaWordRepository.countDuplicateVocaWord(saveVocaWordReq.getWord1(), saveVocaWordReq.getWord2(),
+                saveVocaWordReq.getWord3(), saveVocaWordReq.getWord4(), saveVocaWordReq.getVocaId()) > 0){
+            throw new DuplicateException("단어장의 요소가");
         }
-        return words;
+
+        vocaWordRepository.save(saveVocaWordReq.toEntity(
+                vocaRepository.findById(saveVocaWordReq.getVocaId()).orElseThrow(() -> new NoneException("단어장이"))));
     }
 
-    public VocaWord findVocaWord(Long id) {
-        return vocaWordRepositoy.findByVocaid(id);
+    @Transactional
+    public void deleteVoca(Long id) {
+        vocaRepository.deleteById(id);
     }
 
-    public List<Voca> findVocaByMemberid(Long id) {
-        return vocaJpaRepository.findVocaByMember(id);
+    public PageImpl<VocaListRes> findVocaList(String vocaName, Long userId, Pageable pageRequest) {
+        return vocaRepository.findVocaList(vocaName, userId, pageRequest);
     }
 
-    public List<VocaWord> findByVocaid(Long id) {
-        return vocaWordRepositoy.findByVocaId(id);
+    public List<VocaWord> findVocaWordList(Long vocaId) {
+        return vocaWordRepository.findVocaWordByVocaIdOrderByRegDtAsc(vocaId);
     }
-
 
 }

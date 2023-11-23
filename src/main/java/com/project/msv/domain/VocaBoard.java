@@ -1,22 +1,20 @@
 package com.project.msv.domain;
 
 import com.project.msv.domain.baseEntity.CUpdate;
-import com.project.msv.domain.voca.Voca;
+import com.project.msv.dto.response.vocaBoard.VocaBoardListRes;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VocaBoard extends CUpdate {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vocaBoard_id")
     private Long id;
 
@@ -50,11 +48,22 @@ public class VocaBoard extends CUpdate {
         this.buycount = buycount;
     }
 
-    public void updateCount(int count) {
-        this.count = count;
+    public void updateCount() {
+        this.count += 1;
     }
 
-    public void updateBuycount(int count) {
-        this.buycount = count;
+    public void updateBuycount() {
+        this.buycount += 1;
+    }
+
+    public VocaBoardListRes toDto() {
+        return VocaBoardListRes.builder()
+                .board(board)
+                .title(title)
+                .point(point)
+                .vocaBoardId(voca.getId())
+                .viewCount(count)
+                .buyCount(buycount)
+                .build();
     }
 }

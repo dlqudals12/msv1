@@ -4,14 +4,9 @@ spring:
     url: jdbc:mysql://localhost:3306/msv
     username: root
     password: 1234
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 560454378714-2pvpoigh48l1dn310gq7969ng63lb2h2.apps.googleusercontent.com
-            client-secret: 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
-            scope: profile, email
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
     hibernate:
       jdbc:
@@ -20,6 +15,7 @@ spring:
         order_updates: true
       ddl-auto: update
     properties:
+      hibernate:
         show_sql: true
         format_sql: true
   autoconfigure:
@@ -31,20 +27,16 @@ spring:
         max-page-size: 2000
   main:
     allow-bean-definition-overriding: true
-  profiles:
-    include: oauth
-  boot:
-    admin:
-      url: http://localhost:8080
-      client:
-        url: http://localhost:8080
-        username: admin
-        password: admin
-        instance:
-          metadata:
-            member.name: admin
-            member.password: admin
 
+springdoc:
+  packages-to-scan: com.project.msv.controller
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  api-docs:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: method
 
 logging.level:
   org.hibernate.SQL: debug

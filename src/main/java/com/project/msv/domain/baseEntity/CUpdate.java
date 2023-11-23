@@ -1,10 +1,7 @@
 package com.project.msv.domain.baseEntity;
 
-import lombok.Builder;
 import lombok.Getter;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -18,12 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class CUpdate extends Create{
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime updateDate;
-
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
-
+    private LocalDateTime updateDt;
 
 }
