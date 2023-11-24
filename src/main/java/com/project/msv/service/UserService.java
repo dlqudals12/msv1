@@ -63,8 +63,13 @@ public class UserService {
         refreshToken.setPath("/");
         refreshToken.setMaxAge(60 * 60 * 24 * 60);
 
+        Cookie userId = new Cookie("userId", user.getLoginId());
+        userId.setPath("/");
+        userId.setMaxAge(60 * 60 * 24 * 60);
+
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
+        response.addCookie(userId);
 
         result.put("accessToken", accessToken.getValue());
         result.put("refreshToken", refreshToken.getValue());

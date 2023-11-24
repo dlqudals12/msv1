@@ -2,6 +2,7 @@ package com.project.msv.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.msv.domain.baseEntity.CUpdate;
+import com.project.msv.dto.request.voca.UpdateVocaWord;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,5 +33,10 @@ public class VocaWord extends CUpdate {
     @JoinColumn(name = "voca_id", nullable = false)
     private Voca voca;
 
-
+    public void updateVocaWord(UpdateVocaWord updateVocaWord) {
+        this.word1 = updateVocaWord.getWord1();
+        this.word2 = updateVocaWord.getWord2();
+        this.word3 = updateVocaWord.getWord3();
+        this.word4 = updateVocaWord.getWord4();
+    }
 }

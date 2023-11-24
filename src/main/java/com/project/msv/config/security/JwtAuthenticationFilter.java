@@ -113,8 +113,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         refreshToken.setHttpOnly(true);
         refreshToken.setMaxAge(0);
 
+
+        Cookie userId = new Cookie("userId", null);
+        userId.setPath("/");
+        userId.setMaxAge(0);
+
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
+        response.addCookie(userId);
     }
 
     public void addAccessTokens(User user, HttpServletResponse response) {

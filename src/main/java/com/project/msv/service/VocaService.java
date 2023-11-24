@@ -6,6 +6,7 @@ import com.project.msv.domain.Voca;
 import com.project.msv.domain.VocaWord;
 import com.project.msv.dto.request.voca.SaveVocaReq;
 import com.project.msv.dto.request.voca.SaveVocaWordReq;
+import com.project.msv.dto.request.voca.UpdateVocaWord;
 import com.project.msv.dto.response.voca.VocaListRes;
 import com.project.msv.exception.DuplicateException;
 import com.project.msv.exception.NoneException;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class VocaService {
     private final TradeVocaRepository tradeVocaRepository;
 
     @Transactional
-    public void saveVoca(SaveVocaReq saveVocaReq, Long idx) {
+    public Long saveVoca(SaveVocaReq saveVocaReq, Long idx) {
         if(vocaRepository.countVocaByVocaName(saveVocaReq.getVocaName()) > 0) {
             throw new DuplicateException("단어장이");
         }
@@ -42,6 +43,8 @@ public class VocaService {
                         .voca(voca)
                         .user(user)
                         .build());
+
+        return voca.getId();
     }
 
     @Transactional
@@ -56,6 +59,18 @@ public class VocaService {
     }
 
     @Transactional
+    public void updateVocaWord(UpdateVocaWord updateVocaWord) {
+        VocaWord vocaWord = vocaWordRepository.findById(updateVocaWord.getVocaWordId()).orElseThrow(() -> new NoneException("단어장 요소가"));
+
+        vocaWord.updateVocaWord(updateVocaWord);
+    }
+
+    @Transactional
+    public void deleteVocaword(Long id) {
+        vocaWordRepository.deleteById(id);
+    }
+
+    @Transactional
     public void deleteVoca(Long id) {
         vocaRepository.deleteById(id);
     }
@@ -64,8 +79,11 @@ public class VocaService {
         return vocaRepository.findVocaList(vocaName, userId, pageRequest);
     }
 
-    public List<VocaWord> findVocaWordList(Long vocaId) {
-        return vocaWordRepository.findVocaWordByVocaIdOrderByRegDtAsc(vocaId);
+    public HashMap<String, Object> findVocaWordList(Long vocaId) {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("voca", vocaRepository.findById(vocaId).orElseThrow(() -> new NoneException("단어장이")));
+        result.put("vocaWordList", vocaWordRepository.findVocaWordByVocaIdOrderByRegDtAsc(vocaId));
+        return result;
     }
 
 }

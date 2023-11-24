@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import "./wireframe.css";
+import { Routes, Route } from "react-router-dom";
+import { Main } from "./component/main/main";
+import { Login } from "./component/user/login";
+import { Signup } from "./component/user/signup";
+import { NewVoca } from "./component/voca/newVoca";
+import { VocaDetail } from "./component/voca/vocaDetail";
+import { VocaList } from "./component/voca/vocaList";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path={"/"} element={<Main />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/voca/new" element={<NewVoca />} />
+        <Route path="/voca/detail" element={<VocaDetail />} />
+        <Route path="/voca/list" element={<VocaList />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;

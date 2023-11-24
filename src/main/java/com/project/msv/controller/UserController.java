@@ -34,7 +34,7 @@ public class UserController {
 
     @Operation(summary = "로그인", description = "로그인")
     @PostMapping(value = "/login")
-    public DefaultResponse login(LoginUserReq loginUserReq, HttpServletResponse response) {
+    public DefaultResponse login(@RequestBody LoginUserReq loginUserReq, HttpServletResponse response) {
 
         HashMap<String, Object> result = userService.login(loginUserReq, response);
 
@@ -53,8 +53,14 @@ public class UserController {
         refreshToken.setHttpOnly(true);
         refreshToken.setMaxAge(0);
 
+
+        Cookie userId = new Cookie("userId", null);
+        userId.setPath("/");
+        userId.setMaxAge(0);
+
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
+        response.addCookie(userId);
 
         return new DefaultResponse();
     }
