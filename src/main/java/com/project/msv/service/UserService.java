@@ -4,6 +4,7 @@ import com.project.msv.config.security.JwtTokenProvider;
 import com.project.msv.domain.User;
 import com.project.msv.dto.request.user.LoginUserReq;
 import com.project.msv.dto.request.user.SaveUserReq;
+import com.project.msv.dto.request.user.UpdateUserReq;
 import com.project.msv.exception.DuplicateException;
 import com.project.msv.exception.NoMatchesException;
 import com.project.msv.exception.NoneException;
@@ -78,5 +79,15 @@ public class UserService {
         result.put("userName", user.getName());
 
         return result;
+    }
+
+    @Transactional
+    public void updateUser(UpdateUserReq updateUserReq, Long userId) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoneException("유저가"));
+
+        if(updateUserReq.getType().equals("password")) updateUserReq.setPassword(encoder.encode(updateUserReq.getPassword()));
+
+        user.updateUser(updateUserReq);
     }
 }

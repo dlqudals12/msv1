@@ -4,7 +4,10 @@ import { Header } from "../common/header";
 import { useEffect, useState } from "react";
 import { CheckLg } from "react-bootstrap-icons";
 import axios from "axios";
-import Pagination from "react-bootstrap/Pagination";
+import { useAtom } from "jotai";
+import { PaginationData } from "../data/atom";
+import { PaginationCommon } from "../common/paginationCommon";
+import Button from "react-bootstrap/esm/Button";
 
 export const VocaList = () => {
   const navigate = useNavigate();
@@ -13,11 +16,7 @@ export const VocaList = () => {
     vocaName: "",
     page: 1,
   });
-  const [pagination, setPagination] = useState({
-    total: 0,
-    maxPage: 0,
-    start: 1,
-  });
+  const [pagination, setPagination] = useAtom(PaginationData);
 
   useEffect(() => {
     axios
@@ -32,10 +31,20 @@ export const VocaList = () => {
             ...pagination,
             total: res.data.result?.totalElements,
             maxPage: res.data.result?.totalPages,
+            start: Math.floor(filter.page / 10) * 10 + 1,
           });
         }
       });
   }, []);
+
+  const onClickDetail = (item) => {
+    navigate("/voca/detail", {
+      state: {
+        vocaId: item.vocaId,
+        isOwn: item.own,
+      },
+    });
+  };
 
   return (
     <>
@@ -50,7 +59,7 @@ export const VocaList = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h1 className="display-1">VocaList</h1>
+              <h1 className="display-1">My Voca</h1>
             </div>
           </div>
         </div>
@@ -66,10 +75,13 @@ export const VocaList = () => {
                       <th style={{ width: "70px", textAlign: "center" }}>
                         No.
                       </th>
-                      <th>Vocaname</th>
-                      <th>Country</th>
+                      <th>단어장 이름</th>
+                      <th>나라</th>
                       <th style={{ width: "150px", textAlign: "center" }}>
-                        Owner
+                        소유여부
+                      </th>
+                      <th style={{ width: "150px", textAlign: "center" }}>
+                        판매
                       </th>
                     </tr>
                   </thead>
@@ -77,21 +89,23 @@ export const VocaList = () => {
                     {vocaList[0] &&
                       vocaList.map((item, index) => (
                         <>
-                          <tr
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              navigate("/voca/detail", {
-                                state: {
-                                  vocaId: item.vocaId,
-                                  isOwn: item.own,
-                                },
-                              });
-                            }}
-                          >
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{item.vocaName}</td>
-                            <td>{item.country}</td>
-                            <td style={{ textAlign: "center" }}>
+                          <tr style={{ cursor: "pointer" }}>
+                            <td
+                              onClick={() => onClickDetail(item)}
+                              style={{ textAlign: "center" }}
+                            >
+                              {index + 1}
+                            </td>
+                            <td onClick={() => onClickDetail(item)}>
+                              {item.vocaName}
+                            </td>
+                            <td onClick={() => onClickDetail(item)}>
+                              {item.country}
+                            </td>
+                            <td
+                              onClick={() => onClickDetail(item)}
+                              style={{ textAlign: "center" }}
+                            >
                               {item.own ? (
                                 <>
                                   <CheckLg />
@@ -100,32 +114,39 @@ export const VocaList = () => {
                                 <></>
                               )}
                             </td>
+                            <td
+                              style={{ textAlign: "center", cursor: "default" }}
+                            >
+                              <Button
+                                disabled={!item.own || item.sell}
+                                variant="primary"
+                                style={{
+                                  fontSize: "12px",
+                                  padding: "4px 8px 4px 8px",
+                                }}
+                                onClick={() =>
+                                  navigate("/vocaboard/new", {
+                                    state: {
+                                      vocaId: item.vocaId,
+                                      vocaName: item.vocaName,
+                                    },
+                                  })
+                                }
+                              >
+                                판매
+                              </Button>
+                            </td>
                           </tr>
                         </>
                       ))}
                   </tbody>
                 </table>
-                <Pagination>
-                  <Pagination.Prev />
-                  {pagination.total !== 0 ? (
-                    Array.from(
-                      { length: 10 },
-                      (_, i) => i + pagination.start
-                    ).map((item) => (
-                      <>
-                        <Pagination.Item
-                          active={item === filter.page}
-                          activeLabel=""
-                        >
-                          {item}
-                        </Pagination.Item>
-                      </>
-                    ))
-                  ) : (
-                    <Pagination.Item>1</Pagination.Item>
-                  )}
-                  <Pagination.Next />
-                </Pagination>
+                <PaginationCommon
+                  page={filter.page}
+                  setPage={(data) => {
+                    setFilter({ ...filter, page: data });
+                  }}
+                />
               </div>
             </div>
           </div>

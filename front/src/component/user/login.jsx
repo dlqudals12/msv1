@@ -92,6 +92,11 @@ export const Login = () => {
                   className="form-control"
                   placeholder="Password"
                   value={loginData.password}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      onClickLogin();
+                    }
+                  }}
                   onChange={(e) => {
                     setLoginData({ ...loginData, password: e.target.value });
                   }}

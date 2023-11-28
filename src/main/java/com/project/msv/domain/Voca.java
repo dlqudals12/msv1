@@ -37,13 +37,16 @@ public class Voca extends CUpdate {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @Builder.Default
     @OneToMany(mappedBy = "voca", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<VocaWord> vocaWords = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "voca")
+    @JsonIgnore
     private VocaBoard vocaBoard;
 
     @Builder.Default

@@ -17,6 +17,8 @@ public class ReceiptPoint extends CUpdate {
     @Column(name = "receipt_point_id")
     private Long id;
 
+    private Long vocaBoardId;
+
     @Column(nullable = false)
     private int point;
 

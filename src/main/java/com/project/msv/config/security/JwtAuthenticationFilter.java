@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/api/user/save_user",
             "/api/user/login",
             "/api/voca_board/list_voca_board",
+            "/api/voca_board/voca_board_detail",
             "/swagger-ui"
     };
     private final UserService userService;

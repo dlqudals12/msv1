@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { newVocaDefaultValidation } from "../../util/validationUtil";
 import axios from "axios";
 import { ValidationMsg } from "../common/validationMsg";
+import Button from "react-bootstrap/esm/Button";
 
 export const NewVoca = () => {
   const navigate = useNavigate();
@@ -159,13 +160,13 @@ export const NewVoca = () => {
                   onChange={onChangeVocaData}
                 />
               </div>
-              <button
+              <Button
                 type="button"
                 classNameName="btn btn-primary"
                 onClick={onClickNewVoca}
               >
                 등록
-              </button>
+              </Button>
             </div>
           </div>
         </div>

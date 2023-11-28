@@ -7,6 +7,7 @@ import com.project.msv.dto.response.DefaultResponse;
 import com.project.msv.service.VocaBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,7 @@ public class VocaBoardController {
     @PostMapping("/trade_voca")
     public DefaultResponse tradeVoca(@RequestBody TradeVocaReq tradeVocaReq, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
-        vocaBoardService.tradeVoca(tradeVocaReq.getVocaId(), details.getIdx());
-        return new DefaultResponse();
+        return new DefaultResponse(vocaBoardService.tradeVoca(tradeVocaReq.getVocaBoardId(), details.getIdx()));
     }
 
     @Operation(summary = "게시판 체크", description = "게시판 체크")
@@ -44,14 +44,21 @@ public class VocaBoardController {
 
     @Operation(summary = "게시판 리스트", description = "게시판 리스트")
     @GetMapping(value = "/list_voca_board")
-    public DefaultResponse findVocaBoardList(@RequestParam String title, @RequestParam(defaultValue = "false")boolean myVoca , @RequestParam String loginId,
-                                             Pageable pageable) {
-        return new DefaultResponse(vocaBoardService.findVocaBoardList(title, loginId, pageable));
+    public DefaultResponse findVocaBoardList(@RequestParam String title, @RequestParam String loginId,
+                                             @RequestParam int page) {
+        return new DefaultResponse(vocaBoardService.findVocaBoardList(title, loginId, PageRequest.of(page - 1, 10)));
     }
 
     @Operation(summary = "게시판 상세", description = "게시판 상세")
-    @PostMapping(value = "/voca_board_detail")
-    public DefaultResponse findVocaBoardDetail(@RequestParam Long id) {
-        return new DefaultResponse(vocaBoardService.findVocaBoardById(id));
+    @GetMapping(value = "/voca_board_detail")
+    public DefaultResponse findVocaBoardDetail(@RequestParam Long id, @RequestParam boolean updateCount) {
+        return new DefaultResponse(vocaBoardService.findVocaBoardById(id, updateCount));
+    }
+
+    @Operation(summary = "게시판 상세 USER", description = "게시판 상세 USER")
+    @GetMapping(value = "/user_voca_board_detail")
+    public DefaultResponse findVocaBoardUserDetail(@RequestParam Long id, @RequestParam boolean updateCount, Authentication authentication) {
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+        return new DefaultResponse(vocaBoardService.findUserVocaBoardById(id, details.getIdx(),updateCount));
     }
 }

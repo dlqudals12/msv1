@@ -1,11 +1,15 @@
 package com.project.msv.repository;
 
+import com.project.msv.domain.QTradeVoca;
 import com.project.msv.domain.QVocaBoard;
 import com.project.msv.domain.VocaBoard;
+import com.project.msv.dto.request.vocaBoard.VocaBoardDetailDto;
 import com.project.msv.dto.response.vocaBoard.VocaBoardListRes;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -15,6 +19,7 @@ import java.util.List;
 public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport implements VocaBoardRepositoryCustom{
 
     private QVocaBoard vocaBoard = QVocaBoard.vocaBoard;
+    private QTradeVoca tradeVoca = QTradeVoca.tradeVoca;
     private JPAQueryFactory jpaQueryFactory;
 
     public VocaBoardRepositoryCustomImpl(JPAQueryFactory jpaQueryFactory) {
@@ -41,6 +46,27 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
         return new PageImpl<>(vocaBoardList.stream().map(VocaBoard::toDto).toList(), pageable, countTotal(title, userId));
     }
 
+    @Override
+    public VocaBoardDetailDto findVocaDetail(Long id, Long userId) {
+        return jpaQueryFactory
+                .select(Projections.bean(
+                  VocaBoardDetailDto.class,
+                        vocaBoard.id,
+                        vocaBoard.title,
+                        vocaBoard.board,
+                        vocaBoard.count,
+                        vocaBoard.point,
+                        vocaBoard.buycount,
+                        vocaBoard.voca,
+                        vocaBoard.voca.user.id.eq(userId).as("own"),
+                        haveVoca(vocaBoard.voca.id, userId)
+                ))
+                .from(vocaBoard)
+                .join(vocaBoard.voca)
+                .where(vocaBoard.id.eq(id))
+                .fetchOne();
+    }
+
     private long countTotal(String title, Long userId) {
         return jpaQueryFactory
                 .select(vocaBoard)
@@ -63,5 +89,12 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
         }
 
         return builder;
+    }
+
+    private BooleanExpression haveVoca(NumberPath<Long> id, Long userId) {
+        return jpaQueryFactory.select(tradeVoca.countDistinct())
+                .from(tradeVoca)
+                .where(tradeVoca.voca.id.eq(id), tradeVoca.user.id.eq(userId))
+                .gt(0L).as("haveVoca");
     }
 }

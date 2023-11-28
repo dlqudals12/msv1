@@ -2,17 +2,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
-import { useState } from "react";
+import { useAtom } from "jotai";
+import { IsLogin } from "../data/atom";
+import { useEffect } from "react";
 
 export const Header = () => {
   const navigate = useNavigate();
   const [cookies, ,] = useCookies("userId");
-  const [loginBool, setLoginBool] = useState(Boolean(cookies.userId));
+  const [loginBool, setLoginBool] = useAtom(IsLogin);
+
+  useEffect(() => {
+    setLoginBool(Boolean(cookies.userId));
+  }, []);
 
   const logoutUser = () => {
     axios.post(process.env.PUBLIC_URL + "/api/user/logout").then((res) => {
       setLoginBool(false);
       navigate("/");
+      sessionStorage.removeItem("isUpdate");
     });
   };
 
@@ -44,20 +51,14 @@ export const Header = () => {
                 >
                   <Dropdown.Item
                     className="dropdown-item"
-                    href="/user/charge/new"
+                    href="/point/exchange"
                   >
                     환전
                   </Dropdown.Item>
-                  <Dropdown.Item
-                    className="dropdown-item"
-                    href="/user/charge/list"
-                  >
+                  <Dropdown.Item className="dropdown-item" href="/point/list">
                     거래 내역
                   </Dropdown.Item>
-                  <Dropdown.Item
-                    className="dropdown-item"
-                    href="/user/charge/point"
-                  >
+                  <Dropdown.Item className="dropdown-item" href="/point/charge">
                     포인트 충전
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -85,7 +86,7 @@ export const Header = () => {
                     New Voca
                   </Dropdown.Item>
                   <Dropdown.Item className="dropdown-item" href="/voca/list">
-                    My Voca
+                    Voca 등록
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -121,7 +122,7 @@ export const Header = () => {
         </nav>
         {loginBool ? (
           <>
-            <Link to="/user/userInfo" className="btn btn-outline-info">
+            <Link to="/userInfo" className="btn btn-outline-info">
               {cookies.userId} 정보
             </Link>
             <Link

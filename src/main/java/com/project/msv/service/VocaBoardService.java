@@ -3,6 +3,7 @@ package com.project.msv.service;
 import com.project.msv.domain.*;
 import com.project.msv.domain.enums.ReceiptType;
 import com.project.msv.dto.request.vocaBoard.SaveVocaBoardReq;
+import com.project.msv.dto.request.vocaBoard.VocaBoardDetailDto;
 import com.project.msv.dto.response.vocaBoard.VocaBoardListRes;
 import com.project.msv.exception.*;
 import com.project.msv.repository.*;
@@ -11,8 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ public class VocaBoardService {
 
     @Transactional
     public void saveVocaBoard(SaveVocaBoardReq saveVocaBoardReq, Long userId) {
+        System.out.println(vocaBoardRepository.countVocaBoardByVocaIdOrTitle(saveVocaBoardReq.getVocaId(), saveVocaBoardReq.getTitle()));
         if(vocaBoardRepository.countVocaBoardByVocaIdOrTitle(saveVocaBoardReq.getVocaId(), saveVocaBoardReq.getTitle()) > 0) {
             throw new DuplicateException("단어장 거래가");
         }
@@ -42,7 +42,7 @@ public class VocaBoardService {
     }
 
     @Transactional
-    public void tradeVoca(Long vocaBoardId, Long userId) {
+    public int tradeVoca(Long vocaBoardId, Long userId) {
         VocaBoard vocaBoard = vocaBoardRepository.findById(vocaBoardId).orElseThrow(() -> new NoneException("게시판이"));
 
         if(tradeVocaRepository.countByUserIdAndVocaId(userId, vocaBoard.getVoca().getId()) != 0) {
@@ -63,23 +63,43 @@ public class VocaBoardService {
 
         user.setPoint(user.getPoint() - vocaBoard.getPoint());
         voca.getUser().setPoint(voca.getUser().getPoint() + vocaBoard.getPoint());
+        vocaBoard.updateBuycount();
 
         receiptPointRepository.save(ReceiptPoint.builder()
+                        .vocaBoardId(vocaBoardId)
                         .point(vocaBoard.getPoint())
                         .fromUser(user.getLoginId())
                         .toUser(voca.getUser().getLoginId())
                         .receiptType(ReceiptType.DEALVOCA)
                 .build());
+
+        return user.getPoint();
     }
 
 
     public PageImpl<VocaBoardListRes> findVocaBoardList(String title, String loginId,Pageable pageable) {
-        User user = userRepository.findUserByLoginId(loginId).orElseThrow(() -> new NoAccessUserException());
-        return vocaBoardRepository.findVocaBoardList(title,user.getId(),pageable);
+        User user = null;
+        if(!loginId.isEmpty()) user = userRepository.findUserByLoginId(loginId).orElseThrow(() -> new NoAccessUserException());
+        return vocaBoardRepository.findVocaBoardList(title,user== null ? null : user.getId(),pageable);
     }
 
-    public VocaBoard findVocaBoardById(Long id) {
-        return vocaBoardRepository.findById(id).orElseThrow(() -> new NoneException("단어장 거래가"));
+    @Transactional
+    public VocaBoardDetailDto findVocaBoardById(Long id, boolean updateCount) {
+        VocaBoard vocaBoard = vocaBoardRepository.findById(id).orElseThrow(() -> new NoneException("단어장 거래가"));
+
+        if(updateCount) vocaBoard.updateCount();
+
+        return vocaBoard.toDto(false);
+    }
+
+    @Transactional
+    public VocaBoardDetailDto findUserVocaBoardById(Long id, Long userId, boolean updateCount) {
+        VocaBoard vocaBoard = vocaBoardRepository.findById(id).orElseThrow(() -> new NoneException("단어장 거래가"));
+        VocaBoardDetailDto vocaDetail = vocaBoardRepository.findVocaDetail(id, userId);
+
+        if(updateCount) vocaBoard.updateCount();
+
+        return vocaDetail;
     }
 
     public void checkOwnVoca(Long vocaId, Long userId) {
@@ -94,6 +114,8 @@ public class VocaBoardService {
             throw new DuplicateException("단어장 거래가");
         }
     }
+
+
 
 
 

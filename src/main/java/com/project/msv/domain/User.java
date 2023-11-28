@@ -3,6 +3,7 @@ package com.project.msv.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.msv.domain.baseEntity.CUpdate;
 import com.project.msv.domain.enums.Role;
+import com.project.msv.dto.request.user.UpdateUserReq;
 import lombok.*;
 
 import javax.persistence.*;
@@ -57,6 +58,16 @@ public class User extends CUpdate{
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<TradeVoca> tradeVocas = new ArrayList<>();
+
+    public void updateUser(UpdateUserReq updateUserReq) {
+        if(updateUserReq.getType().equals("password")) {
+            this.password = updateUserReq.getPassword();
+        } else {
+            this.name = updateUserReq.getName();
+            this.email = updateUserReq.getEmail();
+            this.phone = updateUserReq.getPhone();
+        }
+    }
 
 
 

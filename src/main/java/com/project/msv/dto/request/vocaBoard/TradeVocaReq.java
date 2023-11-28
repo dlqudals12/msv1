@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class TradeVocaReq {
 
-    private Long vocaId;
+    private Long vocaBoardId;
 }

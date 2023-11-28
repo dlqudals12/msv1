@@ -1,6 +1,7 @@
 package com.project.msv.controller;
 
 import com.project.msv.config.security.model.CustomDetails;
+import com.project.msv.dto.request.user.UpdateUserReq;
 import com.project.msv.dto.request.user.LoginUserReq;
 import com.project.msv.dto.request.user.SaveUserReq;
 import com.project.msv.dto.response.DefaultResponse;
@@ -9,7 +10,6 @@ import com.project.msv.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -46,10 +46,12 @@ public class UserController {
     public DefaultResponse logout(HttpServletResponse response) {
 
         Cookie accessToken = new Cookie("accessToken", null);
+        accessToken.setPath("/");
         accessToken.setHttpOnly(true);
         accessToken.setMaxAge(0);
 
         Cookie refreshToken = new Cookie("refreshToken", null);
+        refreshToken.setPath("/");
         refreshToken.setHttpOnly(true);
         refreshToken.setMaxAge(0);
 
@@ -71,6 +73,14 @@ public class UserController {
         CustomDetails user = (CustomDetails) authentication.getDetails();
 
         return new DefaultResponse(userService.findUserById(user.getIdx()).orElseThrow(() -> new UserException("없는")));
+    }
+
+    @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
+    @PostMapping(value = "/update_user")
+    public DefaultResponse updateUser(@RequestBody UpdateUserReq updateUserReq, Authentication authentication) {
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+        userService.updateUser(updateUserReq, details.getIdx());
+        return new DefaultResponse();
     }
 
 }

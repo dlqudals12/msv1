@@ -1,6 +1,8 @@
 package com.project.msv.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.msv.domain.baseEntity.CUpdate;
+import com.project.msv.dto.request.vocaBoard.VocaBoardDetailDto;
 import com.project.msv.dto.response.vocaBoard.VocaBoardListRes;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,6 +31,7 @@ public class VocaBoard extends CUpdate {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voca_id")
+    @JsonIgnore
     private Voca voca;
 
 
@@ -49,11 +52,11 @@ public class VocaBoard extends CUpdate {
     }
 
     public void updateCount() {
-        this.count += 1;
+        this.count = count + 1;
     }
 
     public void updateBuycount() {
-        this.buycount += 1;
+        this.buycount = buycount + 1;
     }
 
     public VocaBoardListRes toDto() {
@@ -61,9 +64,23 @@ public class VocaBoard extends CUpdate {
                 .board(board)
                 .title(title)
                 .point(point)
-                .vocaBoardId(voca.getId())
+                .vocaBoardId(id)
                 .viewCount(count)
                 .buyCount(buycount)
+                .build();
+    }
+
+    public VocaBoardDetailDto toDto(boolean own) {
+        return VocaBoardDetailDto.builder()
+                .id(id)
+                .title(title)
+                .board(board)
+                .point(point)
+                .count(count)
+                .buycount(buycount)
+                .voca(voca)
+                .own(own)
+                .haveVoca(false)
                 .build();
     }
 }

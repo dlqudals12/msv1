@@ -18,3 +18,9 @@ export const newVocaDefaultValidation = {
   nullColumn1: false,
   nullColumn2: false,
 };
+
+export const newVocaBoardDefaultValidation = {
+  nullTitle: false,
+  point: false,
+  nullDescription: false,
+};

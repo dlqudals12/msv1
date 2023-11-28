@@ -254,7 +254,7 @@ export const VocaDetail = () => {
                                 item.word2
                               )}
                             </td>
-                            {vocaInfo.word3 && (
+                            {vocaInfo.column3 && (
                               <td>
                                 {item.write ? (
                                   <>
@@ -271,7 +271,7 @@ export const VocaDetail = () => {
                                 )}
                               </td>
                             )}
-                            {vocaInfo.word4 && (
+                            {vocaInfo.column4 && (
                               <td>
                                 {item.write ? (
                                   <>

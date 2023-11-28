@@ -19,6 +19,7 @@ public class VocaListRes {
     private String column3;
     private String column4;
     private boolean own;
+    private boolean sell;
 
 
 }
