@@ -14,10 +14,12 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "voca_board")
 public class VocaBoard extends CUpdate {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vocaBoard_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "voca_board_id")
     private Long id;
 
     @Column(nullable = false)
@@ -38,7 +40,6 @@ public class VocaBoard extends CUpdate {
     private int count;
 
     private int buycount;
-
 
 
     @Builder

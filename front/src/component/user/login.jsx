@@ -44,7 +44,7 @@ export const Login = () => {
         .post(process.env.PUBLIC_URL + "/api/user/login", loginData)
         .then((res) => {
           if (res.data.code === "0000") {
-            navigate("/");
+            navigate(-1);
           } else {
             alert(res.data.msg);
           }

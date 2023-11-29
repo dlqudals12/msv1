@@ -7,21 +7,24 @@ import com.project.msv.dto.request.user.UpdateUserReq;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class User extends CUpdate{
+@Table(name = "user")
+public class User extends CUpdate {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     @JsonIgnore
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50, name = "login_id")
     private String loginId;
 
     @Column(nullable = false, unique = true, length = 200)
@@ -60,7 +63,7 @@ public class User extends CUpdate{
     private List<TradeVoca> tradeVocas = new ArrayList<>();
 
     public void updateUser(UpdateUserReq updateUserReq) {
-        if(updateUserReq.getType().equals("password")) {
+        if (updateUserReq.getType().equals("password")) {
             this.password = updateUserReq.getPassword();
         } else {
             this.name = updateUserReq.getName();
@@ -68,7 +71,6 @@ public class User extends CUpdate{
             this.phone = updateUserReq.getPhone();
         }
     }
-
 
 
 }

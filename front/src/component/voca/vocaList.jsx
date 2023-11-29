@@ -34,7 +34,8 @@ export const VocaList = () => {
             start: Math.floor(filter.page / 10) * 10 + 1,
           });
         }
-      });
+      })
+      .catch((e) => {});
   }, []);
 
   const onClickDetail = (item) => {

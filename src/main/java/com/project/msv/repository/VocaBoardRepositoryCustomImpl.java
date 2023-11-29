@@ -10,26 +10,34 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.sql.JPASQLQuery;
+import com.querydsl.sql.SQLTemplates;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport implements VocaBoardRepositoryCustom{
+public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport implements VocaBoardRepositoryCustom {
 
+    @PersistenceContext
+    private EntityManager entityManager;
     private QVocaBoard vocaBoard = QVocaBoard.vocaBoard;
     private QTradeVoca tradeVoca = QTradeVoca.tradeVoca;
-    private JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
+    private final SQLTemplates sqlTemplates;
 
-    public VocaBoardRepositoryCustomImpl(JPAQueryFactory jpaQueryFactory) {
+    public VocaBoardRepositoryCustomImpl(JPAQueryFactory jpaQueryFactory, SQLTemplates sqlTemplates) {
         super(VocaBoard.class);
         this.jpaQueryFactory = jpaQueryFactory;
+        this.sqlTemplates = sqlTemplates;
     }
 
 
     @Override
-    public PageImpl<VocaBoardListRes> findVocaBoardList(String title, Long userId,Pageable pageable) {
+    public PageImpl<VocaBoardListRes> findVocaBoardList(String title, Long userId, Pageable pageable) {
         List<VocaBoard> vocaBoardList = jpaQueryFactory
                 .select(vocaBoard)
                 .from(vocaBoard)
@@ -42,7 +50,6 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
                 .fetch();
 
 
-
         return new PageImpl<>(vocaBoardList.stream().map(VocaBoard::toDto).toList(), pageable, countTotal(title, userId));
     }
 
@@ -50,7 +57,7 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
     public VocaBoardDetailDto findVocaDetail(Long id, Long userId) {
         return jpaQueryFactory
                 .select(Projections.bean(
-                  VocaBoardDetailDto.class,
+                        VocaBoardDetailDto.class,
                         vocaBoard.id,
                         vocaBoard.title,
                         vocaBoard.board,
@@ -67,6 +74,14 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
                 .fetchOne();
     }
 
+    @Override
+    public List<VocaBoard> findVocaBoardList() {
+        JPASQLQuery<Object> query = new JPASQLQuery<>(entityManager, sqlTemplates);
+
+
+        return null;
+    }
+
     private long countTotal(String title, Long userId) {
         return jpaQueryFactory
                 .select(vocaBoard)
@@ -80,11 +95,11 @@ public class VocaBoardRepositoryCustomImpl extends QuerydslRepositorySupport imp
     private BooleanBuilder vocaBoardFilter(String title, Long userId) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(!title.isEmpty()) {
+        if (!title.isEmpty()) {
             builder.and(vocaBoard.title.contains(title));
         }
 
-        if(userId != null) {
+        if (userId != null) {
             builder.and(vocaBoard.voca.user.id.eq(userId));
         }
 

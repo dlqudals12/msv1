@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Footer } from "../common/footer";
 import { Header } from "../common/header";
@@ -9,6 +9,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
 export const VocaDetail = () => {
+  const focusRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
   const [refresh, setRefresh] = useState(false);
@@ -16,6 +17,7 @@ export const VocaDetail = () => {
   const [vocaInfo, setVocaInfo] = useState();
   const [vocaWordList, setVocaWordList] = useState([]);
   const [isOwn, setIsOwn] = useState(false);
+  const [maxCol, setMaxCol] = useState(0);
 
   useEffect(() => {
     if (location.state) {
@@ -28,6 +30,14 @@ export const VocaDetail = () => {
           const data = res.data.result;
 
           setVocaInfo(data.voca);
+
+          if (Boolean(data.voca.column4)) {
+            setMaxCol(4);
+          } else if (Boolean(data.voca.column3)) {
+            setMaxCol(3);
+          } else if (Boolean(data.voca.column2)) {
+            setMaxCol(2);
+          }
 
           if (location.state.isOwn) {
             setVocaWordList([
@@ -91,7 +101,7 @@ export const VocaDetail = () => {
     );
   };
 
-  const onClickPost = (item) => {
+  const onClickPost = (item, index) => {
     if (item.write) {
       const valid = {
         word1: !Boolean(item.word1),
@@ -111,7 +121,7 @@ export const VocaDetail = () => {
           )
           .then((res) => {
             if (res.data.code === "0000") {
-              alert(`단어장 요소 ${item.isNew ? "등록" : "수정"}했습니다.`);
+              //alert(`단어장 요소 ${item.isNew ? "등록" : "수정"}했습니다.`);
 
               if (item.isNew) {
                 setRefresh(!refresh);
@@ -230,6 +240,7 @@ export const VocaDetail = () => {
                                   <input
                                     value={item.word1}
                                     name="word1"
+                                    autoFocus
                                     onChange={(e) => {
                                       onChangeWord(e, index);
                                     }}
@@ -248,6 +259,12 @@ export const VocaDetail = () => {
                                     onChange={(e) => {
                                       onChangeWord(e, index);
                                     }}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Tab" && maxCol === 2) {
+                                        e.preventDefault();
+                                        onClickPost(item, index);
+                                      }
+                                    }}
                                   />
                                 </>
                               ) : (
@@ -263,6 +280,12 @@ export const VocaDetail = () => {
                                       name="word3"
                                       onChange={(e) => {
                                         onChangeWord(e, index);
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Tab" && maxCol === 3) {
+                                          e.preventDefault();
+                                          onClickPost(item, index);
+                                        }
                                       }}
                                     />
                                   </>
@@ -280,6 +303,12 @@ export const VocaDetail = () => {
                                       name="word4"
                                       onChange={(e) => {
                                         onChangeWord(e, index);
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Tab" && maxCol === 4) {
+                                          e.preventDefault();
+                                          onClickPost(item, index);
+                                        }
                                       }}
                                     />
                                   </>
@@ -303,7 +332,7 @@ export const VocaDetail = () => {
                                       fontSize: "12px",
                                       height: "30px",
                                     }}
-                                    onClick={() => onClickPost(item)}
+                                    onClick={() => onClickPost(item, index)}
                                   >
                                     {item.isNew ? "저장" : "수정"}
                                   </Button>

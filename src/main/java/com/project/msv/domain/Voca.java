@@ -2,7 +2,6 @@ package com.project.msv.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.msv.domain.baseEntity.CUpdate;
-import com.project.msv.dto.response.voca.VocaListRes;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,16 +13,19 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Table(name = "voca")
 public class Voca extends CUpdate {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voca_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "voca_name")
     private String vocaName;
 
     @Column(nullable = false)
-    private String country;;
+    private String country;
+    ;
 
     @Column(nullable = false)
     private String column1;

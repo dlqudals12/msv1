@@ -9,8 +9,10 @@ import Button from "react-bootstrap/esm/Button";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import moment from "moment";
+import { Coin } from "react-bootstrap-icons";
+import { JournalCheck } from "react-bootstrap-icons";
 
-export const VocaBoardReceipt = () => {
+export const ReceiptList = () => {
   const navigate = useNavigate();
   const [receiptList, setReceiptList] = useState([]);
   const [cookies, ,] = useCookies("userId");
@@ -38,9 +40,7 @@ export const VocaBoardReceipt = () => {
           alert(res.data.msg);
         }
       })
-      .catch((e) => {
-        alert("시스템 오류");
-      });
+      .catch((e) => {});
   }, [filter]);
 
   return (
@@ -72,7 +72,7 @@ export const VocaBoardReceipt = () => {
                       <th style={{ width: "70px", textAlign: "center" }}>
                         No.
                       </th>
-                      <th style={{ textAlign: "center" }}>단어장 이름</th>
+                      <th style={{ textAlign: "center" }}>거래 품목</th>
                       <th style={{ textAlign: "center" }}>판매자</th>
                       <th style={{ textAlign: "center" }}>구매자</th>
                       <th style={{ width: "100px", textAlign: "center" }}>
@@ -84,7 +84,12 @@ export const VocaBoardReceipt = () => {
                       <th style={{ width: "150px", textAlign: "center" }}>
                         거래일
                       </th>
-                      <th style={{ width: "75px" }}></th>
+                      <th style={{ width: "75px", textAlign: "center" }}>
+                        상태
+                      </th>
+                      <th style={{ width: "75px", textAlign: "center" }}>
+                        타입
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -93,12 +98,14 @@ export const VocaBoardReceipt = () => {
                         <>
                           <tr>
                             <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{item.vocaName}</td>
-                            <td>{item.toUser}</td>
-                            <td>{item.fromUser}</td>
+                            <td>
+                              {item.vocaName ? item.vocaName : "포인트 충전"}
+                            </td>
+                            <td>{item.toUser ? item.toUser : "ADMIN"}</td>
+                            <td>{item.fromUser ? item.fromUser : "ADMIN"}</td>
                             <td style={{ textAlign: "right" }}>{item.point}</td>
                             <td style={{ textAlign: "right" }}>
-                              {item.buyCount}
+                              {item.buyCount === 0 ? 1 : item.buyCount}
                             </td>
                             <td style={{ textAlign: "center" }}>
                               {moment(item.regDt).format("YYYY-MM-DD HH:mm")}
@@ -113,6 +120,17 @@ export const VocaBoardReceipt = () => {
                               }}
                             >
                               {item.status}
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                              {item.receiptType === "CHARGE" ? (
+                                <Coin
+                                  style={{ width: "30px", height: "20px" }}
+                                />
+                              ) : (
+                                <JournalCheck
+                                  style={{ width: "30px", height: "20px" }}
+                                />
+                              )}
                             </td>
                           </tr>
                         </>

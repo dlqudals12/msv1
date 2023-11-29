@@ -11,9 +11,12 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "receipt_point")
+@ToString
 public class ReceiptPoint extends CUpdate {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "receipt_point_id")
     private Long id;
 
@@ -22,14 +25,13 @@ public class ReceiptPoint extends CUpdate {
     @Column(nullable = false)
     private int point;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "from_user")
     private String fromUser;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "to_user")
     private String toUser;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
     private ReceiptType receiptType;
 
 

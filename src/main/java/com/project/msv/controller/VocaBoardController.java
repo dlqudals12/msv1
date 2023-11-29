@@ -8,7 +8,6 @@ import com.project.msv.service.VocaBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ public class VocaBoardController {
 
     private final VocaBoardService vocaBoardService;
 
-    @Operation(summary = "게시판 저장",description = "게시판 저장")
+    @Operation(summary = "게시판 저장", description = "게시판 저장")
     @PostMapping(value = "/save_voca_board")
     public DefaultResponse saveVocaBoard(@RequestBody SaveVocaBoardReq saveVocaBoardReq, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
@@ -27,7 +26,7 @@ public class VocaBoardController {
         return new DefaultResponse();
     }
 
-    @Operation(summary = "단어장 거래",description = "단어장 거래")
+    @Operation(summary = "단어장 거래", description = "단어장 거래")
     @PostMapping("/trade_voca")
     public DefaultResponse tradeVoca(@RequestBody TradeVocaReq tradeVocaReq, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
@@ -59,6 +58,12 @@ public class VocaBoardController {
     @GetMapping(value = "/user_voca_board_detail")
     public DefaultResponse findVocaBoardUserDetail(@RequestParam Long id, @RequestParam boolean updateCount, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
-        return new DefaultResponse(vocaBoardService.findUserVocaBoardById(id, details.getIdx(),updateCount));
+        return new DefaultResponse(vocaBoardService.findUserVocaBoardById(id, details.getIdx(), updateCount));
+    }
+
+    @Operation(summary = "게시판 테스트", description = "게시판 테스트")
+    @GetMapping(value = "/vocaListTest")
+    public DefaultResponse findVocaListTest() {
+        return new DefaultResponse(vocaBoardService.testListVocaBoard());
     }
 }

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
@@ -7,6 +7,7 @@ import { IsLogin } from "../data/atom";
 import { useEffect } from "react";
 
 export const Header = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [cookies, ,] = useCookies("userId");
   const [loginBool, setLoginBool] = useAtom(IsLogin);
@@ -55,11 +56,20 @@ export const Header = () => {
                   >
                     환전
                   </Dropdown.Item>
-                  <Dropdown.Item className="dropdown-item" href="/point/list">
-                    거래 내역
+                  <Dropdown.Item
+                    className="dropdown-item"
+                    href="/point/charge/list"
+                  >
+                    환전 내역
                   </Dropdown.Item>
                   <Dropdown.Item className="dropdown-item" href="/point/charge">
                     포인트 충전
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="dropdown-item"
+                    href="/point/receipt"
+                  >
+                    포인트 거래내역
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -107,12 +117,6 @@ export const Header = () => {
                 className="dropdown-menu"
                 aria-labelledby="dropdownMenuLink"
               >
-                <Dropdown.Item
-                  className="dropdown-item"
-                  href="/vocaboard/receipt"
-                >
-                  Voca 거래내역
-                </Dropdown.Item>
                 <Dropdown.Item className="dropdown-item" href="/vocaboard/list">
                   Voca 거래소
                 </Dropdown.Item>

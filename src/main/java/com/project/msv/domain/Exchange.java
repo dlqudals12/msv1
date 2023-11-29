@@ -18,9 +18,16 @@ public class Exchange extends Create {
     @Column(name = "exchange_id")
     private Long id;
 
+    @Column(nullable = false)
     private int money;
+
+    @Column(nullable = false)
     private String bank;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String banknum;
 
     @Enumerated(EnumType.STRING)

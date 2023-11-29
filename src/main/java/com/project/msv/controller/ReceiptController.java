@@ -17,20 +17,22 @@ public class ReceiptController {
 
     private final ReceiptPointService receiptPointService;
 
-    @Operation(description = "거래 내역 조회",summary = "거래 내역 조회")
+    @Operation(description = "거래 내역 조회", summary = "거래 내역 조회")
     @GetMapping(value = "/receipt_list")
     public DefaultResponse findReceiptList(@RequestParam int page, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
-        return new DefaultResponse(receiptPointService.findReceiptList(details.getIdx(), PageRequest.of(page-1, 10)));
+        return new DefaultResponse(receiptPointService.findReceiptList(details.getIdx(), PageRequest.of(page - 1, 10)));
     }
 
-    @Operation(description = "포인트 충전",summary = "포인트 충전")
+    @Operation(description = "포인트 충전", summary = "포인트 충전")
     @PostMapping(value = "/charge_point")
     public DefaultResponse chargePoint(@RequestBody ChargePointReq chargePointReq, Authentication authentication) {
         CustomDetails details = (CustomDetails) authentication.getDetails();
 
-        receiptPointService.ChargePoint(chargePointReq,details.getIdx());
+        receiptPointService.ChargePoint(chargePointReq, details.getIdx());
 
         return new DefaultResponse();
     }
+
+   
 }
