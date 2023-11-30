@@ -16,7 +16,7 @@
 
     <sql id="CHARGE">
         select rp.receipt_point_id as id,
-        concat(case when rp.pay_type = 'KAKAO' then '카카오' else '토스' end, '(', rp.payId, ')') as vocaName,
+        concat(case when rp.pay_type = 'KAKAO' then '카카오 ' else '토스 ' end, '(', rp.pay_id, ')') as vocaName,
         concat(fu.name, '(', fu.login_id, ')') as fromUser, '' as toUser,
         rp.point, 0 as buyCount, rp.reg_dt, rp.receipt_type,
         case when fu.user_id = #{userId} then '구매' else '판매' end as status

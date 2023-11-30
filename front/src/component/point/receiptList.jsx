@@ -12,6 +12,7 @@ import moment from "moment";
 import { Coin } from "react-bootstrap-icons";
 import { JournalCheck } from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
+import { Tooltip } from "react-tooltip";
 
 export const ReceiptList = () => {
   const navigate = useNavigate();
@@ -44,6 +45,8 @@ export const ReceiptList = () => {
       })
       .catch((e) => {});
   }, [filter]);
+
+  console.log("토스(2Dv9ZPM7zXLkKEypNArWda0JLX".length);
 
   return (
     <>
@@ -91,7 +94,9 @@ export const ReceiptList = () => {
                       <th style={{ width: "70px", textAlign: "center" }}>
                         No.
                       </th>
-                      <th style={{ textAlign: "center" }}>거래 품목</th>
+                      <th style={{ textAlign: "center", width: "300px" }}>
+                        거래 품목
+                      </th>
                       <th style={{ textAlign: "center" }}>판매자</th>
                       <th style={{ textAlign: "center" }}>구매자</th>
                       <th style={{ width: "100px", textAlign: "center" }}>
@@ -117,9 +122,29 @@ export const ReceiptList = () => {
                         <>
                           <tr>
                             <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>
-                              {item.vocaName ? item.vocaName : "포인트 충전"}
+                            <td
+                              style={{
+                                width: "300px",
+                                display: "block",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                              data-tooltip-id={"vocaName" + index}
+                              data-tooltip-content={item.vocaName}
+                            >
+                              <span
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  navigator.clipboard.writeText(item.vocaName);
+                                }}
+                              >
+                                {item.vocaName ? item.vocaName : "포인트 충전"}
+                              </span>
                             </td>
+                            {item.vocaName.length > 28 && (
+                              <Tooltip id={"vocaName" + index} place="top" />
+                            )}
                             <td>{item.toUser ? item.toUser : "ADMIN"}</td>
                             <td>{item.fromUser ? item.fromUser : "ADMIN"}</td>
                             <td style={{ textAlign: "right" }}>{item.point}</td>
