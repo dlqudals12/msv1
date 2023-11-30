@@ -48,7 +48,7 @@ export const VocaDetail = () => {
                   word1: data.word1,
                   word2: data.word2,
                   word3: data.word3,
-                  word4: data.word5,
+                  word4: data.word4,
                   write: false,
                   isNew: false,
                 };
@@ -75,7 +75,7 @@ export const VocaDetail = () => {
                   word1: data.word1,
                   word2: data.word2,
                   word3: data.word3,
-                  word4: data.word5,
+                  word4: data.word4,
                   write: false,
                   isNew: false,
                 };
@@ -106,8 +106,6 @@ export const VocaDetail = () => {
       const valid = {
         word1: !Boolean(item.word1),
         word2: !Boolean(item.word2),
-        word3: !Boolean(item.word3) && vocaInfo.column3,
-        word4: !Boolean(item.word4) && vocaInfo.column4,
       };
 
       if (!Object.values(valid).includes(true)) {

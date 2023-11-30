@@ -42,6 +42,12 @@ springdoc:
 logging.level:
   org.hibernate.SQL: debug
 
+mybatis:
+  type-aliases-package: com.project.msv.model
+  mapper-locations: mybatis/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
 
 
 

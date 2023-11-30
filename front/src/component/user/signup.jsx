@@ -54,7 +54,11 @@ export const Signup = () => {
         .then((res) => {
           if (res.data.code === "0000") {
             alert("회원가입이 완료되었습니다.");
-            navigate("/login");
+            navigate("/login", {
+              state: {
+                signup: true,
+              },
+            });
           } else {
             alert(res.data.msg);
           }

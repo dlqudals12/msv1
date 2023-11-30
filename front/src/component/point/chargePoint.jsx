@@ -15,6 +15,7 @@ const clientKey = "test_ck_7DLJOpm5QrlJLlY4dxo3PNdxbWnY";
 export const ChargePoint = () => {
   const navigate = useNavigate();
   const [searchParam, setSearchParam] = useSearchParams();
+  const [pointNow, setPointNow] = useState(0);
   const [chargeData, setChargeData] = useState({
     chargeType: "",
     point: 0,
@@ -44,6 +45,9 @@ export const ChargePoint = () => {
               axios
                 .post(process.env.PUBLIC_URL + "/api/receipt/charge_point", {
                   point: Number(searchParam.get("point")),
+                  orderId: searchParam.get("orderId"),
+                  payId: searchParam.get("paymentKey"),
+                  payType: "TOSS",
                 })
                 .then((res) => {
                   if (res.data.code === "0000") {
@@ -59,6 +63,7 @@ export const ChargePoint = () => {
                     searchParam.delete("point");
                     searchParam.delete("orderId");
                     setSearchParam(searchParam);
+                    navigate("/point/receipt");
                   } else {
                     alert(res.data.msg);
                   }
@@ -82,24 +87,15 @@ export const ChargePoint = () => {
           : "" + "결제에 실패하였습니다."
       );
       navigate("/point/charge");
+    } else {
+      axios
+        .get(process.env.PUBLIC_URL + "/api/user/user_info")
+        .then((res) => {
+          setPointNow(res.data.result.point);
+        })
+        .catch((e) => {});
     }
   }, []);
-
-  const buttonTest = () => {
-    axios
-      .get(
-        "https://api.tosspayments.com/v1/payments/jvX2KBP9QADpexMgkW36xPvw4nyWXJrGbR5ozO06yLYlaEJ7",
-        {
-          headers: {
-            Authorization:
-              "Basic dGVzdF9za19PRVA1OUx5Ylo4QjA2NW1rRTFXVjZHWW83cFJlOg==",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      });
-  };
 
   const onClickCharge = async () => {
     const valid = {
@@ -109,19 +105,59 @@ export const ChargePoint = () => {
 
     if (!Object.values(valid).includes(true)) {
       const uuid = uuidv4().replaceAll("-", "");
-      const tossPayments = await loadTossPayments(clientKey);
-      tossPayments.requestPayment("카드", {
-        amount: chargeData.point,
-        orderId: uuid,
-        orderName: "포인트 충전",
-        customerName: cookies.userId,
-        successUrl: `http://localhost:3000/point/charge?payStatus=success&point=${chargeData.point}&chargeType=${chargeData.chargeType}&orderId=${uuid}`,
-        failUrl: `http://localhost:3000/point/charge?payStatus=fail&chargeType=${chargeData.chargeType}`,
-        validHours: 24,
-        cashReceipt: {
-          type: "소득공제",
-        },
-      });
+
+      if (chargeData.chargeType === "TOSS") {
+        const tossPayments = await loadTossPayments(clientKey);
+        tossPayments.requestPayment("카드", {
+          amount: chargeData.point,
+          orderId: uuid,
+          orderName: "포인트 충전",
+          customerName: cookies.userId,
+          successUrl: `http://localhost:3000/point/charge?payStatus=success&point=${chargeData.point}&chargeType=${chargeData.chargeType}&orderId=${uuid}`,
+          failUrl: `http://localhost:3000/point/charge?payStatus=fail&chargeType=${chargeData.chargeType}`,
+          validHours: 24,
+          cashReceipt: {
+            type: "소득공제",
+          },
+        });
+      } else if (chargeData.chargeType === "KAKAO") {
+        window.payKakao = () => {
+          return {
+            ...chargeData,
+            userId: cookies.userId,
+            orderId: uuid,
+          };
+        };
+        window.payKakaoEnd = (kakaoPoint, orderId, payId) => {
+          axios
+            .post(process.env.PUBLIC_URL + "/api/receipt/charge_point", {
+              point: kakaoPoint,
+              orderId: orderId,
+              payId: payId,
+              payType: "KAKAO",
+            })
+            .then((res) => {
+              if (res.data.code === "0000") {
+                alert(
+                  (searchParam.get("chargeType") === "TOSS" ? "페이 " : "") +
+                    "결제에 성공하였습니다. \n 남은 금액: " +
+                    res.data.result
+                );
+                navigate("/point/receipt");
+              } else {
+                alert(res.data.msg);
+              }
+            })
+            .catch((e) => {
+              alert("시스템 오류");
+            });
+        };
+        window.open(
+          process.env.PUBLIC_URL + "/point/charge/kakaoPay",
+          "_blank",
+          "width=500,height=600"
+        );
+      }
     } else {
       alert(
         valid.chargeData
@@ -129,26 +165,6 @@ export const ChargePoint = () => {
           : "포인트는 1이상이어야 합니다."
       );
     }
-    /* axios
-        .post(process.env.PUBLIC_URL + "/api/receipt/charge_point", chargeData)
-        .then((res) => {
-          if (res.data.code === "0000") {
-            alert("충전에 성공했습니다.");
-            navigate("/point/list");
-          } else {
-            alert(res.data.msg);
-          }
-        })
-        .catch((e) => {
-          alert("시스템 오류");
-        });
-    } else {
-      alert(
-        valid.chargeData
-          ? "결제 타입을 선택해주세요."
-          : "포인트는 1이상이어야 합니다."
-      );
-    } */
   };
 
   return (
@@ -170,7 +186,11 @@ export const ChargePoint = () => {
               <Card.Subtitle>결제 방식을 선택하세요</Card.Subtitle>
               <Card.Text className="mt-2">
                 <Button
-                  style={{ backgroundColor: "#0D6EFD", color: "#FFFFFF" }}
+                  style={{
+                    backgroundColor: "#0D6EFD",
+                    color: "#FFFFFF",
+                    width: "80px",
+                  }}
                   active={chargeData.chargeType === "TOSS"}
                   onClick={() => {
                     setChargeData({
@@ -181,6 +201,21 @@ export const ChargePoint = () => {
                   }}
                 >
                   TOSS
+                </Button>
+                <Button
+                  variant="warning"
+                  className="ml-2"
+                  style={{ width: "80px" }}
+                  active={chargeData.chargeType === "TOSS"}
+                  onClick={() => {
+                    setChargeData({
+                      ...chargeData,
+                      chargeType:
+                        chargeData.chargeType === "KAKAO" ? "" : "KAKAO",
+                    });
+                  }}
+                >
+                  KAKAO
                 </Button>
               </Card.Text>
               <Card.Subtitle className="mt-3">
@@ -209,7 +244,7 @@ export const ChargePoint = () => {
                   <option value={30000}>30000</option>
                   <option value={40000}>40000</option>
                   <option value={50000}>50000</option>
-                  <option value={10000}>100000</option>
+                  <option value={100000}>100000</option>
                   <option value={-1}>직접입력</option>
                 </Form.Select>
                 <input
@@ -228,11 +263,12 @@ export const ChargePoint = () => {
                   }}
                 />
               </Card.Text>
-              <Card.Text className="mt-4 mb-0">
-                결제 금액: {chargeData.point}
-              </Card.Text>
+              <Card.Text className="mt-4 mb-0">내 포인트: {pointNow}</Card.Text>
               <Card.Text className="mt-0 mb-0">
                 충전 포인트: {chargeData.point}
+              </Card.Text>
+              <Card.Text className="mt-0 mb-0">
+                결제 금액: {chargeData.point}
               </Card.Text>
               <Card.Text className="mt-0">
                 결제 방법: {chargeData.chargeType}
@@ -247,7 +283,6 @@ export const ChargePoint = () => {
               >
                 충전
               </Button>
-              <Button onClick={buttonTest}>TEST</Button>
             </Card.Footer>
           </Card>
         </div>

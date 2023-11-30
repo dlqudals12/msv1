@@ -1,6 +1,7 @@
 package com.project.msv.service;
 
 import com.project.msv.domain.*;
+import com.project.msv.domain.enums.PayType;
 import com.project.msv.domain.enums.ReceiptType;
 import com.project.msv.dto.request.vocaBoard.SaveVocaBoardReq;
 import com.project.msv.dto.request.vocaBoard.VocaBoardDetailDto;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,12 +69,16 @@ public class VocaBoardService {
         voca.getUser().setPoint(voca.getUser().getPoint() + vocaBoard.getPoint());
         vocaBoard.updateBuycount();
 
+        UUID uuid = UUID.randomUUID();
+
         receiptPointRepository.save(ReceiptPoint.builder()
                 .vocaBoardId(vocaBoardId)
                 .point(vocaBoard.getPoint())
+                .orderId(uuid.toString())
                 .fromUser(user.getLoginId())
                 .toUser(voca.getUser().getLoginId())
                 .receiptType(ReceiptType.DEALVOCA)
+                .payType(PayType.POINT)
                 .build());
 
         return user.getPoint();

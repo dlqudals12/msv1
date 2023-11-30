@@ -3,7 +3,7 @@ import { Footer } from "../common/footer";
 import { Header } from "../common/header";
 import { regUtil } from "../../util/regUtil";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { ValidationMsg } from "../common/validationMsg";
@@ -17,6 +17,7 @@ const defaultValidation = {
 };
 
 export const Login = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     loginId: "",
@@ -44,7 +45,7 @@ export const Login = () => {
         .post(process.env.PUBLIC_URL + "/api/user/login", loginData)
         .then((res) => {
           if (res.data.code === "0000") {
-            navigate(-1);
+            navigate(location.state ? "/" : -1);
           } else {
             alert(res.data.msg);
           }

@@ -1,12 +1,12 @@
 package com.project.msv.service;
 
-import com.project.msv.domain.ReceiptPoint;
 import com.project.msv.domain.User;
 import com.project.msv.dto.request.receipt.ChargePointReq;
-import com.project.msv.dto.response.receipt.ReceiptPointListResIn;
+import com.project.msv.dto.response.receipt.ReceiptPointListRes;
 import com.project.msv.exception.NoneException;
 import com.project.msv.repository.ReceiptPointRepository;
 import com.project.msv.repository.UserRepository;
+import com.project.msv.repository.mapper.ReceiptPointMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,21 +22,22 @@ public class ReceiptPointService {
 
     private final UserRepository userRepository;
     private final ReceiptPointRepository receiptPointRepository;
+    private final ReceiptPointMapper receiptPointMapper;
 
     @Transactional
-    public void ChargePoint(ChargePointReq chargePointReq, Long userId) {
+    public int ChargePoint(ChargePointReq chargePointReq, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoneException("유저가"));
-        ReceiptPoint entity = chargePointReq.toEntity(user.getLoginId());
-        receiptPointRepository.save(entity);
-        //receiptPointRepository.save(chargePointReq.toEntity(user.getLoginId()));
+        receiptPointRepository.save(chargePointReq.toEntity(user.getLoginId()));
 
-        //user.setPoint(user.getPoint() + chargePointReq.getPoint());
+        user.setPoint(user.getPoint() + chargePointReq.getPoint());
+
+        return user.getPoint();
     }
 
-    public PageImpl<ReceiptPointListResIn> findReceiptList(Long userId, Pageable pageable) {
-        List<ReceiptPointListResIn> receiptList = receiptPointRepository.findReceiptList(userId, pageable.getPageSize(), pageable.getOffset());
+    public PageImpl<ReceiptPointListRes> findReceiptList(Long userId, String receiptType, Pageable pageable) {
+        List<ReceiptPointListRes> receiptList = receiptPointMapper.findReceiptList(userId, receiptType, pageable.getPageSize(), pageable.getOffset());
 
-        return new PageImpl<>(receiptList, pageable, receiptPointRepository.findReceiptListCount(userId));
+        return new PageImpl<>(receiptList, pageable, receiptPointMapper.findReceiptListCount(userId, receiptType));
     }
 
 }

@@ -50,7 +50,7 @@ export const Header = () => {
                   className="dropdown-menu"
                   aria-labelledby="dropdownMenuLink"
                 >
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     className="dropdown-item"
                     href="/point/exchange"
                   >
@@ -61,7 +61,7 @@ export const Header = () => {
                     href="/point/charge/list"
                   >
                     환전 내역
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
                   <Dropdown.Item className="dropdown-item" href="/point/charge">
                     포인트 충전
                   </Dropdown.Item>
@@ -93,10 +93,10 @@ export const Header = () => {
                   aria-labelledby="dropdownMenuLink"
                 >
                   <Dropdown.Item className="dropdown-item" href="/voca/new">
-                    New Voca
+                    Voca 등록
                   </Dropdown.Item>
                   <Dropdown.Item className="dropdown-item" href="/voca/list">
-                    Voca 등록
+                    My Voca
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

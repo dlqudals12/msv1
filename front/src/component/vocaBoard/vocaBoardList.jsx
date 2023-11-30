@@ -19,7 +19,7 @@ export const VocaBoardList = () => {
     page: 1,
     loginId: "",
   });
-  const [pagination, setPagination] = useAtom(PaginationData);
+  const [, setPagination] = useAtom(PaginationData);
 
   useEffect(() => {
     axios
@@ -84,6 +84,7 @@ export const VocaBoardList = () => {
                       setFilter({
                         ...filter,
                         loginId: e.target.checked ? cookies.userId : "",
+                        page: 1,
                       });
                     }}
                   />
@@ -97,6 +98,10 @@ export const VocaBoardList = () => {
               <input
                 type="text"
                 value={keyword}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter")
+                    setFilter({ ...filter, title: keyword, page: 1 });
+                }}
                 onChange={(e) => {
                   setKeyWord(e.target.value);
                 }}
@@ -108,7 +113,7 @@ export const VocaBoardList = () => {
                   fontSize: "14px",
                 }}
                 onClick={() => {
-                  setFilter({ ...filter, title: keyword });
+                  setFilter({ ...filter, title: keyword, page: 1 });
                 }}
               >
                 검색

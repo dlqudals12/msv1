@@ -1,6 +1,7 @@
 package com.project.msv.domain;
 
 import com.project.msv.domain.baseEntity.CUpdate;
+import com.project.msv.domain.enums.PayType;
 import com.project.msv.domain.enums.ReceiptType;
 import lombok.*;
 
@@ -25,6 +26,11 @@ public class ReceiptPoint extends CUpdate {
     @Column(nullable = false)
     private int point;
 
+    @Column(nullable = false)
+    private String orderId;
+
+    private String payId;
+
     @Column(nullable = false, name = "from_user")
     private String fromUser;
 
@@ -32,7 +38,12 @@ public class ReceiptPoint extends CUpdate {
     private String toUser;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private ReceiptType receiptType;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private PayType payType;
 
 
 }

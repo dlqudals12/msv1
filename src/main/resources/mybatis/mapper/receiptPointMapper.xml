@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.msv.repository.mapper.ReceiptPointMapper">
+
+    <sql id="DEALVOCA">
+        select rp.receipt_point_id as id, concat(v.voca_name, '(', v.country, ')') as vocaName,
+        concat(fu.name, '(', fu.login_id, ')') as fromUser, concat(tu.name, '(', tu.login_id, ')') as toUser,
+        rp.point, vb.buycount as buyCount, rp.reg_dt, rp.receipt_type,
+        case when fu.user_id = #{userId} then '구매' else '판매' end as status
+        from receipt_point rp join user fu on rp.from_user = fu.login_id
+        join user tu on rp.to_user = tu.login_id
+        join voca_board vb on rp.voca_board_id = vb.voca_board_id
+        join voca v on vb.voca_id = v.voca_id
+        where (fu.user_id = #{userId} or tu.user_id = #{userId}) and rp.receipt_type = 'DEALVOCA'
+    </sql>
+
+    <sql id="CHARGE">
+        select rp.receipt_point_id as id,
+        concat(case when rp.pay_type = 'KAKAO' then '카카오' else '토스' end, '(', rp.payId, ')') as vocaName,
+        concat(fu.name, '(', fu.login_id, ')') as fromUser, '' as toUser,
+        rp.point, 0 as buyCount, rp.reg_dt, rp.receipt_type,
+        case when fu.user_id = #{userId} then '구매' else '판매' end as status
+        from receipt_point rp left join user fu on rp.from_user = fu.login_id
+        where (fu.user_id = #{userId}) and rp.receipt_type = 'CHARGE'
+    </sql>
+
+    <select id="findReceiptList" resultType="com.project.msv.dto.response.receipt.ReceiptPointListRes">
+        select re.id, re.vocaName, re.fromUser, re.toUser, re.point, re.buyCount, re.reg_dt as regDt, re.receipt_type as
+        receiptType, re.status
+        from (
+        <choose>
+            <when test='"DEALVOCA".equals(receiptType)'>
+                <include refid="DEALVOCA"/>
+            </when>
+            <when test='"CHARGE".equals(receiptType)'>
+                <include refid="CHARGE"/>
+            </when>
+            <otherwise>
+                (<include refid="DEALVOCA"/>)
+                union all (<include refid="CHARGE"/>)
+            </otherwise>
+        </choose>
+        ) as re
+        order by re.reg_dt desc
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="findReceiptListCount" resultType="int">
+        select count(re.id) as count
+        from (
+        <choose>
+            <when test='"DEALVOCA".equals(receiptType)'>
+                <include refid="DEALVOCA"/>
+            </when>
+            <when test='"CHARGE".equals(receiptType)'>
+                <include refid="CHARGE"/>
+            </when>
+            <otherwise>
+                (<include refid="DEALVOCA"/>)
+                union all (<include refid="CHARGE"/>)
+            </otherwise>
+        </choose>
+        ) as re
+    </select>
+
+</mapper>

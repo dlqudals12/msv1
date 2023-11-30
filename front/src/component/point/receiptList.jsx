@@ -11,6 +11,7 @@ import { useCookies } from "react-cookie";
 import moment from "moment";
 import { Coin } from "react-bootstrap-icons";
 import { JournalCheck } from "react-bootstrap-icons";
+import Form from "react-bootstrap/Form";
 
 export const ReceiptList = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const ReceiptList = () => {
   const [cookies, ,] = useCookies("userId");
   const [filter, setFilter] = useState({
     page: 1,
+    receiptType: "",
   });
   const [pagination, setPagination] = useAtom(PaginationData);
 
@@ -25,7 +27,7 @@ export const ReceiptList = () => {
     axios
       .get(
         process.env.PUBLIC_URL +
-          `/api/receipt//receipt_list?page=${filter.page}`
+          `/api/receipt//receipt_list?page=${filter.page}&receiptType=${filter.receiptType}`
       )
       .then((res) => {
         if (res.data.code === "0000") {
@@ -64,7 +66,24 @@ export const ReceiptList = () => {
       <div className="py-5" draggable="true">
         <div className="container">
           <div className="row" style={{ width: "100%" }}>
-            <div className="col-md-12">
+            <div className="col-md-15">
+              <div className="float-right mb-2">
+                <Form.Select
+                  style={{ width: "160px", height: "35px" }}
+                  value={filter.receiptType}
+                  onChange={(e) => {
+                    setFilter({
+                      ...filter,
+                      receiptType: e.target.value,
+                      page: 1,
+                    });
+                  }}
+                >
+                  <option value={""}>전체</option>
+                  <option value={"CHARGE"}>포인트</option>
+                  <option value={"DEALVOCA"}>단어장</option>
+                </Form.Select>
+              </div>
               <div className="table-responsive">
                 <table className="table table-bordered">
                   <thead className="thead-dark">

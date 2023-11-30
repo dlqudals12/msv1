@@ -29,6 +29,7 @@ export const NewVoca = () => {
       nullCountry: !Boolean(vocaData.country),
       nullColumn1: !Boolean(vocaData.column1),
       nullColumn2: !Boolean(vocaData.column2),
+      nullColumn4: !Boolean(vocaData.column3) && Boolean(vocaData.column4),
     };
 
     setValidation(valid);
@@ -111,6 +112,7 @@ export const NewVoca = () => {
                   id="column1"
                   name="column1"
                   placeholder="First Column"
+                  value={vocaData.column1}
                   onChange={onChangeVocaData}
                 />
                 {validation.nullColumn1 &&
@@ -127,6 +129,7 @@ export const NewVoca = () => {
                   id="column2"
                   name="column2"
                   placeholder="Second Column"
+                  value={vocaData.column2}
                   onChange={onChangeVocaData}
                 />
                 {validation.nullColumn2 &&
@@ -143,6 +146,7 @@ export const NewVoca = () => {
                   id="column3"
                   name="column3"
                   placeholder="Third Column"
+                  value={vocaData.column3}
                   onChange={onChangeVocaData}
                 />
                 <label
@@ -157,8 +161,14 @@ export const NewVoca = () => {
                   id="column4"
                   name="column4"
                   placeholder="Firth Column"
+                  value={vocaData.column4}
                   onChange={onChangeVocaData}
                 />
+                {validation.nullColumn4 &&
+                  ValidationMsg(
+                    validation.nullColumn4,
+                    msg("세 번째 컬럼을 입력 후 입력해 주세요")
+                  )}
               </div>
               <Button
                 type="button"

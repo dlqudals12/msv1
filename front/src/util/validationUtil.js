@@ -17,6 +17,7 @@ export const newVocaDefaultValidation = {
   nullCountry: false,
   nullColumn1: false,
   nullColumn2: false,
+  nullColumn4: false,
 };
 
 export const newVocaBoardDefaultValidation = {

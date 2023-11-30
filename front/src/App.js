@@ -15,6 +15,7 @@ import { ChargePoint } from "./component/point/chargePoint";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { ReceiptList } from "./component/point/receiptList";
+import { KakaoPayOpen } from "./component/common/kakoPayOpen";
 
 const includeUrls = [
   "/login",
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/vocaboard/detail" element={<VocaBoardDetail />} />
         <Route path="/point/receipt" element={<ReceiptList />} />
         <Route path="/point/charge" element={<ChargePoint />} />
+        <Route path="/point/charge/kakaoPay" element={<KakaoPayOpen />} />
       </Routes>
     </div>
   );
