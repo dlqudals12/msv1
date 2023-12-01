@@ -23,9 +23,6 @@
   + 단어장 - 회원이 단어장을 직접 등록할 수 있다.
   + 게시판 - 다른 사용자가 등록한 단어장을 사고 팔 수 있도록 하고 한 번 사고 난 뒤에는 다시 살 수 없도록 해두었다.
 
-## 4. 데이터베이스 설계(erdcloud)
-![MPEtFMFmAnFkPgpbp](https://user-images.githubusercontent.com/22268579/165894074-0b6b22f8-c070-465a-a0d0-5e2becbb88fd.png)
+## 4. DB ERD
+![msv](https://github.com/dlqudals12/msv1/assets/22268579/1ed689ae-574d-4e01-beb5-ca06870194dc)
 
-## 5. 시연 영상
-
-[![Video Label](http://img.youtube.com/vi/gNMBvpHEuHE/0.jpg)](https://youtu.be/gNMBvpHEuHE)
