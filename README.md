@@ -11,7 +11,7 @@
 + 개발 기간 : v1 -> 2022.03.25 ~ 2022.04.31 v2 -> 2023.11.22 -> 2023.12.01
 + 개발 언어 : Java 17
 + FrontEnd: React.js, Bootstrap
-+ BackEnd: Spring Boot(2.6.7), Spring Security(JWT), Jpa, Gradle, QueryDSL
++ BackEnd: Spring Boot(2.6.7), Spring Security(JWT), Jpa, Gradle, QueryDSL, Mybatis
 + 데이터베이스: MySQL
 + Git: Github
 
