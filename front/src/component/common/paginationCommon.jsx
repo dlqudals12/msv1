@@ -2,13 +2,18 @@ import Pagination from "react-bootstrap/Pagination";
 import { useAtom } from "jotai";
 import { PaginationData } from "../data/atom";
 
-export const PaginationCommon = ({ page, setPage }) => {
+export const PaginationCommon = ({ page, setPage, buttons }) => {
   const [paginationData] = useAtom(PaginationData);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Pagination>
-        <Pagination.Item>{"<"}</Pagination.Item>
+        <Pagination.Item
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+        >
+          {"<"}
+        </Pagination.Item>
         {paginationData.total !== 0 ? (
           Array.from(
             { length: paginationData.maxPage },
@@ -29,7 +34,12 @@ export const PaginationCommon = ({ page, setPage }) => {
         ) : (
           <Pagination.Item>1</Pagination.Item>
         )}
-        <Pagination.Item>{">"}</Pagination.Item>
+        <Pagination.Item
+          disabled={paginationData.maxPage === page}
+          onClick={() => setPage(page + 1)}
+        >
+          {">"}
+        </Pagination.Item>
       </Pagination>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Footer } from "../common/footer";
 import { Header } from "../common/header";
 import { PaginationCommon } from "../common/paginationCommon";
@@ -88,99 +88,133 @@ export const ReceiptList = () => {
                 </Form.Select>
               </div>
               <div className="table-responsive">
-                <table className="table table-bordered">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th style={{ width: "70px", textAlign: "center" }}>
-                        No.
-                      </th>
-                      <th style={{ textAlign: "center", width: "300px" }}>
-                        거래 품목
-                      </th>
-                      <th style={{ textAlign: "center" }}>판매자</th>
-                      <th style={{ textAlign: "center" }}>구매자</th>
-                      <th style={{ width: "100px", textAlign: "center" }}>
-                        포인트
-                      </th>
-                      <th style={{ width: "75px", textAlign: "center" }}>
-                        거래수
-                      </th>
-                      <th style={{ width: "150px", textAlign: "center" }}>
-                        거래일
-                      </th>
-                      <th style={{ width: "75px", textAlign: "center" }}>
-                        상태
-                      </th>
-                      <th style={{ width: "75px", textAlign: "center" }}>
-                        타입
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {receiptList[0] &&
-                      receiptList.map((item, index) => (
-                        <>
-                          <tr>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td
-                              style={{
-                                width: "300px",
-                                display: "block",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }}
-                              data-tooltip-id={"vocaName" + index}
-                              data-tooltip-content={item.vocaName}
-                            >
-                              <span
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  navigator.clipboard.writeText(item.vocaName);
+                <div style={{ minHeight: "610px" }}>
+                  <table className="table table-bordered">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th style={{ width: "70px", textAlign: "center" }}>
+                          No.
+                        </th>
+                        <th style={{ textAlign: "center", width: "300px" }}>
+                          거래 품목
+                        </th>
+                        <th style={{ textAlign: "center" }}>판매자</th>
+                        <th style={{ textAlign: "center" }}>구매자</th>
+                        <th style={{ width: "100px", textAlign: "center" }}>
+                          포인트
+                        </th>
+                        <th style={{ width: "75px", textAlign: "center" }}>
+                          거래수
+                        </th>
+                        <th style={{ width: "150px", textAlign: "center" }}>
+                          거래일
+                        </th>
+                        <th style={{ width: "75px", textAlign: "center" }}>
+                          상태
+                        </th>
+                        <th style={{ width: "75px", textAlign: "center" }}>
+                          타입
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {receiptList[0] &&
+                        receiptList.map((item, index) => (
+                          <>
+                            <tr>
+                              <td style={{ textAlign: "center" }}>
+                                {index + 1}
+                              </td>
+                              <td
+                                style={{
+                                  width: "300px",
+                                  display: "block",
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                }}
+                                data-tooltip-id={"vocaName" + index}
+                                data-tooltip-content={item.vocaName}
+                              >
+                                <span
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(
+                                      item.vocaName
+                                    );
+                                  }}
+                                >
+                                  {item.vocaName
+                                    ? item.vocaName
+                                    : "포인트 충전"}
+                                </span>
+                              </td>
+                              {item.vocaName.length > 28 && (
+                                <Tooltip id={"vocaName" + index} place="top" />
+                              )}
+                              <td>
+                                {item.toUser ? item.toUser : "관리자(ADMIN)"}
+                              </td>
+                              <td>
+                                {item.fromUser
+                                  ? item.fromUser
+                                  : "관리자(ADMIN)"}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {item.point}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {item.buyCount === 0 ? 1 : item.buyCount}
+                              </td>
+                              <td style={{ textAlign: "center" }}>
+                                {moment(item.regDt).format("YYYY-MM-DD HH:mm")}
+                              </td>
+                              <td
+                                style={{
+                                  textAlign: "center",
+                                  color:
+                                    item.status === "판매"
+                                      ? "#E03D3D"
+                                      : "#93bf85",
                                 }}
                               >
-                                {item.vocaName ? item.vocaName : "포인트 충전"}
-                              </span>
-                            </td>
-                            {item.vocaName.length > 28 && (
-                              <Tooltip id={"vocaName" + index} place="top" />
-                            )}
-                            <td>{item.toUser ? item.toUser : "ADMIN"}</td>
-                            <td>{item.fromUser ? item.fromUser : "ADMIN"}</td>
-                            <td style={{ textAlign: "right" }}>{item.point}</td>
-                            <td style={{ textAlign: "right" }}>
-                              {item.buyCount === 0 ? 1 : item.buyCount}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
-                              {moment(item.regDt).format("YYYY-MM-DD HH:mm")}
-                            </td>
-                            <td
-                              style={{
-                                textAlign: "center",
-                                color:
-                                  item.status === "판매"
-                                    ? "#E03D3D"
-                                    : "#93bf85",
-                              }}
-                            >
-                              {item.status}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
-                              {item.receiptType === "CHARGE" ? (
-                                <Coin
-                                  style={{ width: "30px", height: "20px" }}
-                                />
-                              ) : (
-                                <JournalCheck
-                                  style={{ width: "30px", height: "20px" }}
-                                />
-                              )}
-                            </td>
-                          </tr>
-                        </>
-                      ))}
-                  </tbody>
-                </table>
+                                {item.status}
+                              </td>
+                              <td style={{ textAlign: "center" }}>
+                                {item.receiptType === "CHARGE" ? (
+                                  <Coin
+                                    style={{ width: "30px", height: "20px" }}
+                                  />
+                                ) : (
+                                  <JournalCheck
+                                    style={{ width: "30px", height: "20px" }}
+                                  />
+                                )}
+                              </td>
+                            </tr>
+                          </>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    fontSize: "15px",
+                  }}
+                >
+                  <Button
+                    style={{
+                      padding: "5px 10px 5px 10px",
+                    }}
+                    variant="success"
+                    onClick={() => navigate("/point/charge")}
+                  >
+                    포인트 충전
+                  </Button>
+                </div>
                 <PaginationCommon
                   page={filter.page}
                   setPage={(data) => {
