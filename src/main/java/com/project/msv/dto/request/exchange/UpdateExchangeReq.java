@@ -7,5 +7,6 @@ import lombok.Data;
 public class UpdateExchangeReq {
 
     private Long exchangeId;
+    private String loginId;
     private Status status;
 }

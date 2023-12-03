@@ -11,12 +11,12 @@ public class SaveExchangeReq {
     private int money;
     private String bank;
     private String name;
-    private String banknum;
+    private String bankNum;
 
     public Exchange toEntity(User user) {
         return Exchange.builder()
                 .bank(bank)
-                .banknum(banknum)
+                .bankNum(bankNum)
                 .money(money)
                 .name(name)
                 .status(Status.PROCESSING)

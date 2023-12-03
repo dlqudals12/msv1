@@ -14,13 +14,13 @@ import { JournalCheck } from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 import { Tooltip } from "react-tooltip";
 
-export const ReceiptList = () => {
+export const ExchangeList = () => {
   const navigate = useNavigate();
-  const [receiptList, setReceiptList] = useState([]);
+  const [exchangeList, setExchangeList] = useState([]);
   const [cookies, ,] = useCookies("userId");
   const [filter, setFilter] = useState({
     page: 1,
-    receiptType: "",
+    status: "",
   });
   const [pagination, setPagination] = useAtom(PaginationData);
 
@@ -28,12 +28,12 @@ export const ReceiptList = () => {
     axios
       .get(
         process.env.PUBLIC_URL +
-          `/api/receipt/receipt_list?page=${filter.page}&receiptType=${filter.receiptType}`
+          `/api/exchange/exchange_user_list?page=${filter.page}&status=${filter.status}`
       )
       .then((res) => {
         if (res.data.code === "0000") {
           const result = res.data.result;
-          setReceiptList(result?.content);
+          setExchangeList(result?.content);
           setPagination({
             total: result.totalElements,
             maxPage: result.totalPages,
@@ -46,7 +46,18 @@ export const ReceiptList = () => {
       .catch((e) => {});
   }, [filter]);
 
-  console.log("토스(2Dv9ZPM7zXLkKEypNArWda0JLX".length);
+  const statusVal = (status) => {
+    switch (status) {
+      case "PROCESSING":
+        return <span style={{ color: "#0D6EFD" }}>처리중</span>;
+      case "COMPLETED":
+        return <span style={{ color: "#218838" }}>완료</span>;
+      case "CANCEL":
+        return <span style={{ color: "red" }}>처리 거부</span>;
+      case "REVOKE":
+        return <span style={{ color: "red" }}>취소</span>;
+    }
+  };
 
   return (
     <>
@@ -73,18 +84,20 @@ export const ReceiptList = () => {
               <div className="float-right mb-2">
                 <Form.Select
                   style={{ width: "160px", height: "35px" }}
-                  value={filter.receiptType}
+                  value={filter.status}
                   onChange={(e) => {
                     setFilter({
                       ...filter,
-                      receiptType: e.target.value,
+                      status: e.target.value,
                       page: 1,
                     });
                   }}
                 >
                   <option value={""}>전체</option>
-                  <option value={"CHARGE"}>포인트</option>
-                  <option value={"DEALVOCA"}>단어장</option>
+                  <option value={"PROCESSING"}>처리중</option>
+                  <option value={"COMPLETED"}>완료</option>
+                  <option value={"CANCEL"}>처리 거부</option>
+                  <option value={"REVOKE"}>취소</option>
                 </Form.Select>
               </div>
               <div className="table-responsive">
@@ -96,100 +109,59 @@ export const ReceiptList = () => {
                           No.
                         </th>
                         <th style={{ textAlign: "center", width: "300px" }}>
-                          거래 품목
+                          계좌번호
                         </th>
-                        <th style={{ textAlign: "center" }}>판매자</th>
-                        <th style={{ textAlign: "center" }}>구매자</th>
                         <th style={{ width: "100px", textAlign: "center" }}>
-                          포인트
+                          은행명
                         </th>
-                        <th style={{ width: "75px", textAlign: "center" }}>
-                          거래수
+                        <th style={{ width: "100px", textAlign: "center" }}>
+                          입금자명
                         </th>
                         <th style={{ width: "150px", textAlign: "center" }}>
-                          거래일
+                          금액
                         </th>
-                        <th style={{ width: "75px", textAlign: "center" }}>
+                        <th style={{ textAlign: "center" }}>거래일</th>
+                        <th style={{ width: "100px", textAlign: "center" }}>
                           상태
                         </th>
-                        <th style={{ width: "75px", textAlign: "center" }}>
-                          타입
-                        </th>
+                        <th style={{ width: "100px" }}></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {receiptList[0] &&
-                        receiptList.map((item, index) => (
+                      {exchangeList[0] &&
+                        exchangeList.map((item, index) => (
                           <>
                             <tr>
                               <td style={{ textAlign: "center" }}>
                                 {index + 1}
                               </td>
-                              <td
-                                style={{
-                                  width: "300px",
-                                  display: "block",
-                                  whiteSpace: "nowrap",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                }}
-                                data-tooltip-id={"vocaName" + index}
-                                data-tooltip-content={item.vocaName}
-                              >
-                                <span
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(
-                                      item.vocaName
-                                    );
-                                  }}
-                                >
-                                  {item.vocaName
-                                    ? item.vocaName
-                                    : "포인트 충전"}
-                                </span>
+                              <td>{item.bankNum}</td>
+                              <td style={{ textAlign: "center" }}>
+                                {item.bank}
                               </td>
-                              {item.vocaName.length > 28 && (
-                                <Tooltip id={"vocaName" + index} place="top" />
-                              )}
-                              <td>
-                                {item.toUser ? item.toUser : "관리자(ADMIN)"}
-                              </td>
-                              <td>
-                                {item.fromUser
-                                  ? item.fromUser
-                                  : "관리자(ADMIN)"}
+                              <td style={{ textAlign: "center" }}>
+                                {item.name}
                               </td>
                               <td style={{ textAlign: "right" }}>
-                                {item.point}
-                              </td>
-                              <td style={{ textAlign: "right" }}>
-                                {item.buyCount === 0 ? 1 : item.buyCount}
+                                {item.money}
                               </td>
                               <td style={{ textAlign: "center" }}>
                                 {moment(item.regDt).format("YYYY-MM-DD HH:mm")}
                               </td>
-                              <td
-                                style={{
-                                  textAlign: "center",
-                                  color:
-                                    item.status === "판매"
-                                      ? "#E03D3D"
-                                      : "#93bf85",
-                                }}
-                              >
-                                {item.status}
+                              <td style={{ textAlign: "center" }}>
+                                {statusVal(item.status)}
                               </td>
                               <td style={{ textAlign: "center" }}>
-                                {item.receiptType === "CHARGE" ? (
-                                  <Coin
-                                    style={{ width: "30px", height: "20px" }}
-                                  />
-                                ) : (
-                                  <JournalCheck
-                                    style={{ width: "30px", height: "20px" }}
-                                  />
-                                )}
+                                <Button
+                                  variant="danger"
+                                  style={{
+                                    fontSize: "12px",
+                                    padding: "3px 8px 3px 8px",
+                                  }}
+                                  disabled={item.status !== "PROCESSING"}
+                                >
+                                  삭제
+                                </Button>
                               </td>
                             </tr>
                           </>
@@ -210,9 +182,9 @@ export const ReceiptList = () => {
                       padding: "5px 10px 5px 10px",
                     }}
                     variant="success"
-                    onClick={() => navigate("/point/charge")}
+                    onClick={() => navigate("/point/exchange")}
                   >
-                    포인트 충전
+                    환전
                   </Button>
                 </div>
                 <PaginationCommon
