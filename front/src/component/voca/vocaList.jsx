@@ -36,7 +36,7 @@ export const VocaList = () => {
         }
       })
       .catch((e) => {});
-  }, []);
+  }, [filter]);
 
   const onClickDetail = (item) => {
     navigate("/voca/detail", {
@@ -70,78 +70,100 @@ export const VocaList = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-                <table className="table table-bordered">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th style={{ width: "70px", textAlign: "center" }}>
-                        No.
-                      </th>
-                      <th>단어장 이름</th>
-                      <th>나라</th>
-                      <th style={{ width: "150px", textAlign: "center" }}>
-                        소유여부
-                      </th>
-                      <th style={{ width: "150px", textAlign: "center" }}>
-                        판매
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vocaList[0] &&
-                      vocaList.map((item, index) => (
-                        <>
-                          <tr style={{ cursor: "pointer" }}>
-                            <td
-                              onClick={() => onClickDetail(item)}
-                              style={{ textAlign: "center" }}
-                            >
-                              {index + 1}
-                            </td>
-                            <td onClick={() => onClickDetail(item)}>
-                              {item.vocaName}
-                            </td>
-                            <td onClick={() => onClickDetail(item)}>
-                              {item.country}
-                            </td>
-                            <td
-                              onClick={() => onClickDetail(item)}
-                              style={{ textAlign: "center" }}
-                            >
-                              {item.own ? (
-                                <>
-                                  <CheckLg />
-                                </>
-                              ) : (
-                                <></>
-                              )}
-                            </td>
-                            <td
-                              style={{ textAlign: "center", cursor: "default" }}
-                            >
-                              <Button
-                                disabled={!item.own || item.sell}
-                                variant="primary"
-                                style={{
-                                  fontSize: "12px",
-                                  padding: "4px 8px 4px 8px",
-                                }}
-                                onClick={() =>
-                                  navigate("/vocaboard/new", {
-                                    state: {
-                                      vocaId: item.vocaId,
-                                      vocaName: item.vocaName,
-                                    },
-                                  })
-                                }
+                <div style={{ minHeight: "610px" }}>
+                  <table className="table table-bordered">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th style={{ width: "70px", textAlign: "center" }}>
+                          No.
+                        </th>
+                        <th>단어장 이름</th>
+                        <th>나라</th>
+                        <th style={{ width: "150px", textAlign: "center" }}>
+                          소유여부
+                        </th>
+                        <th style={{ width: "150px", textAlign: "center" }}>
+                          판매
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vocaList[0] &&
+                        vocaList.map((item, index) => (
+                          <>
+                            <tr style={{ cursor: "pointer" }}>
+                              <td
+                                onClick={() => onClickDetail(item)}
+                                style={{ textAlign: "center" }}
                               >
-                                판매
-                              </Button>
-                            </td>
-                          </tr>
-                        </>
-                      ))}
-                  </tbody>
-                </table>
+                                {index + 1}
+                              </td>
+                              <td onClick={() => onClickDetail(item)}>
+                                {item.vocaName}
+                              </td>
+                              <td onClick={() => onClickDetail(item)}>
+                                {item.country}
+                              </td>
+                              <td
+                                onClick={() => onClickDetail(item)}
+                                style={{ textAlign: "center" }}
+                              >
+                                {item.own ? (
+                                  <>
+                                    <CheckLg />
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </td>
+                              <td
+                                style={{
+                                  textAlign: "center",
+                                  cursor: "default",
+                                }}
+                              >
+                                <Button
+                                  disabled={!item.own || item.sell}
+                                  variant="primary"
+                                  style={{
+                                    fontSize: "12px",
+                                    padding: "4px 8px 4px 8px",
+                                  }}
+                                  onClick={() =>
+                                    navigate("/vocaboard/new", {
+                                      state: {
+                                        vocaId: item.vocaId,
+                                        vocaName: item.vocaName,
+                                      },
+                                    })
+                                  }
+                                >
+                                  판매
+                                </Button>
+                              </td>
+                            </tr>
+                          </>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    fontSize: "15px",
+                  }}
+                >
+                  <Button
+                    style={{
+                      padding: "5px 10px 5px 10px",
+                    }}
+                    variant="info"
+                    onClick={() => navigate("/voca/new")}
+                  >
+                    VOCA 등록
+                  </Button>
+                </div>
                 <PaginationCommon
                   page={filter.page}
                   setPage={(data) => {

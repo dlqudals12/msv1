@@ -62,6 +62,18 @@ export const Header = () => {
                   >
                     환전 내역
                   </Dropdown.Item> */}
+                  <Dropdown.Item
+                    className="dropdown-item"
+                    href="/point/exchange"
+                  >
+                    환전
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="dropdown-item"
+                    href="/point/exchange/list"
+                  >
+                    환전 리스트
+                  </Dropdown.Item>
                   <Dropdown.Item className="dropdown-item" href="/point/charge">
                     포인트 충전
                   </Dropdown.Item>

@@ -74,7 +74,7 @@ public class VocaBoardService {
         receiptPointRepository.save(ReceiptPoint.builder()
                 .vocaBoardId(vocaBoardId)
                 .point(vocaBoard.getPoint())
-                .orderId(uuid.toString())
+                .orderId(uuid.toString().replaceAll("-", ""))
                 .fromUser(user.getLoginId())
                 .toUser(voca.getUser().getLoginId())
                 .receiptType(ReceiptType.DEALVOCA)

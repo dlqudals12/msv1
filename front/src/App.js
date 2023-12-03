@@ -16,6 +16,8 @@ import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { ReceiptList } from "./component/point/receiptList";
 import { KakaoPayOpen } from "./component/common/kakoPayOpen";
+import { ExchangePoint } from "./component/point/exchagePoint";
+import { ExchangeList } from "./component/point/exchangeList";
 
 const includeUrls = [
   "/login",
@@ -52,6 +54,8 @@ const App = () => {
         <Route path="/point/receipt" element={<ReceiptList />} />
         <Route path="/point/charge" element={<ChargePoint />} />
         <Route path="/point/charge/kakaoPay" element={<KakaoPayOpen />} />
+        <Route path="/point/exchange" element={<ExchangePoint />} />
+        <Route path="/point/exchange/list" element={<ExchangeList />} />
       </Routes>
     </div>
   );

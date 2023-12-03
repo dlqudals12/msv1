@@ -123,46 +123,48 @@ export const VocaBoardList = () => {
           <div className="row" style={{ width: "100%" }}>
             <div className="col-md-12">
               <div className="table-responsive">
-                <table className="table table-bordered">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th style={{ width: "70px", textAlign: "center" }}>
-                        No.
-                      </th>
-                      <th>제목</th>
-                      <th>포인트</th>
-                      <th style={{ width: "150px", textAlign: "center" }}>
-                        조회수
-                      </th>
-                      <th style={{ width: "150px", textAlign: "center" }}>
-                        판매수
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vocaBoardList[0] &&
-                      vocaBoardList.map((item, index) => (
-                        <>
-                          <tr
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              navigate("/vocaboard/detail", {
-                                state: {
-                                  vocaBoardId: item.vocaBoardId,
-                                },
-                              });
-                            }}
-                          >
-                            <td>{index + 1}</td>
-                            <td>{item.title}</td>
-                            <td>{item.point}</td>
-                            <td>{item.viewCount}</td>
-                            <td>{item.buyCount}</td>
-                          </tr>
-                        </>
-                      ))}
-                  </tbody>
-                </table>
+                <div style={{ minHeight: "610px" }}>
+                  <table className="table table-bordered">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th style={{ width: "70px", textAlign: "center" }}>
+                          No.
+                        </th>
+                        <th>제목</th>
+                        <th>포인트</th>
+                        <th style={{ width: "150px", textAlign: "center" }}>
+                          조회수
+                        </th>
+                        <th style={{ width: "150px", textAlign: "center" }}>
+                          판매수
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vocaBoardList[0] &&
+                        vocaBoardList.map((item, index) => (
+                          <>
+                            <tr
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                navigate("/vocaboard/detail", {
+                                  state: {
+                                    vocaBoardId: item.vocaBoardId,
+                                  },
+                                });
+                              }}
+                            >
+                              <td>{index + 1}</td>
+                              <td>{item.title}</td>
+                              <td>{item.point}</td>
+                              <td>{item.viewCount}</td>
+                              <td>{item.buyCount}</td>
+                            </tr>
+                          </>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
                 <PaginationCommon
                   page={filter.page}
                   setPage={(data) => {

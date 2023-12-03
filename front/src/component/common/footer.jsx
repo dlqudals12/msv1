@@ -18,7 +18,7 @@ export const Footer = () => {
               </li>
             </ul>{" "}
             <i class="d-block fa fa-stop-circle fa-3x mx-auto text-primary"></i>
-            <p class="mb-0 py-1">©2023 All rights reserved</p>
+            <p class="mb-0 py-1">©2023</p>
           </div>
         </div>
       </div>

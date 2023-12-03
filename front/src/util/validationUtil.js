@@ -25,3 +25,10 @@ export const newVocaBoardDefaultValidation = {
   point: false,
   nullDescription: false,
 };
+
+export const newExchangeDefaultValidation = {
+  name: false,
+  money: false,
+  bank: false,
+  bankNum: false,
+};
