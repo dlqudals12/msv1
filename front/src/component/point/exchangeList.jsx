@@ -23,6 +23,7 @@ export const ExchangeList = () => {
     status: "",
   });
   const [pagination, setPagination] = useAtom(PaginationData);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     axios
@@ -44,7 +45,7 @@ export const ExchangeList = () => {
         }
       })
       .catch((e) => {});
-  }, [filter]);
+  }, [filter, refresh]);
 
   const statusVal = (status) => {
     switch (status) {
@@ -56,6 +57,26 @@ export const ExchangeList = () => {
         return <span style={{ color: "red" }}>처리 거부</span>;
       case "REVOKE":
         return <span style={{ color: "red" }}>취소</span>;
+    }
+  };
+
+  const onClickDelete = (id) => {
+    if (window.confirm("해당 환전 내역을 취소하겠습니까?")) {
+      axios
+        .delete(
+          `${process.env.PUBLIC_URL}/api/exchange/delete_exchange_user/${id}`
+        )
+        .then((res) => {
+          if (res.data.code === "0000") {
+            alert("환전 신청이 취소되었습니다.");
+            setRefresh(!refresh);
+          } else {
+            alert(res.data.msg);
+          }
+        })
+        .catch((e) => {
+          alert("시스템 오류");
+        });
     }
   };
 
@@ -72,7 +93,7 @@ export const ExchangeList = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h1 className="display-1">거래내역</h1>
+              <h1 className="display-1">환전내역</h1>
             </div>
           </div>
         </div>
@@ -159,8 +180,9 @@ export const ExchangeList = () => {
                                     padding: "3px 8px 3px 8px",
                                   }}
                                   disabled={item.status !== "PROCESSING"}
+                                  onClick={() => onClickDelete(item.id)}
                                 >
-                                  삭제
+                                  취소
                                 </Button>
                               </td>
                             </tr>

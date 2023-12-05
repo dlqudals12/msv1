@@ -49,5 +49,15 @@ public class ExchangeController {
                 details.getIdx(), status));
     }
 
+    @Operation(summary = "유저 환전 삭제", description = "유저 환전 삭제")
+    @DeleteMapping(value = "/delete_exchange_user/{id}")
+    public DefaultResponse deleteExchangeUser(@PathVariable Long id, Authentication authentication) {
+        CustomDetails details = (CustomDetails) authentication.getDetails();
+
+        exchangeService.deleteById(id, details.getIdx());
+
+        return new DefaultResponse();
+    }
+
 
 }

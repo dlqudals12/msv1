@@ -5,6 +5,7 @@ import com.project.msv.domain.ReceiptPoint;
 import com.project.msv.domain.User;
 import com.project.msv.domain.enums.PayType;
 import com.project.msv.domain.enums.ReceiptType;
+import com.project.msv.domain.enums.Role;
 import com.project.msv.domain.enums.Status;
 import com.project.msv.dto.request.exchange.SaveExchangeReq;
 import com.project.msv.dto.request.exchange.UpdateExchangeReq;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ExchangeService {
 
     private final ReceiptPointRepository receiptPointRepository;
@@ -83,6 +85,12 @@ public class ExchangeService {
 
     @Transactional(readOnly = true)
     public PageImpl<Exchange> findExchangeUser(Pageable pageable, Long userId, String status) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoneException("유저가"));
+
+        if (user.getRole().equals(Role.ADMIN)) {
+            userId = null;
+        }
+
         return exchangeRepository.findExchangeUser(userId, status, pageable);
     }
 

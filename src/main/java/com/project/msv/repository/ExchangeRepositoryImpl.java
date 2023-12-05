@@ -49,7 +49,10 @@ public class ExchangeRepositoryImpl extends QuerydslRepositorySupport implements
 
     private BooleanBuilder filter(Long id, String status) {
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(exchange.user.id.eq(id));
+
+        if (id != null) {
+            builder.and(exchange.user.id.eq(id));
+        }
 
         if (!status.isEmpty()) {
             builder.and(exchange.status.eq(Status.valueOf(status)));
