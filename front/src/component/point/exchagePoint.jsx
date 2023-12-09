@@ -53,7 +53,7 @@ export const ExchangePoint = () => {
         .then((res) => {
           if (res.data.code === "0000") {
             alert("등록 완료하였습니다.");
-            setRefresh(!refresh);
+            navigate("/point/exchange/list");
           } else {
             alert("res.data.code");
           }

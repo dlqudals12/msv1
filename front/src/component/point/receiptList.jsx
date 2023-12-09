@@ -148,10 +148,10 @@ export const ReceiptList = () => {
                                     ? item.vocaName
                                     : "포인트 충전"}
                                 </span>
+                                {item.vocaName.length > 28 && (
+                                                                <Tooltip id={"vocaName" + index} place="top" />
+                                                              )}
                               </td>
-                              {item.vocaName.length > 28 && (
-                                <Tooltip id={"vocaName" + index} place="top" />
-                              )}
                               <td>
                                 {item.toUser ? item.toUser : "관리자(ADMIN)"}
                               </td>
